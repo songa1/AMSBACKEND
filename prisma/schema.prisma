@@ -85,7 +85,6 @@ model User {
   organizationEmployedId Int
   organizationEmployed   Organization @relation("EmployedOrganization", references: [id], fields: [organizationEmployedId])
   positionInEmployed     String
-  password               String
   createdAt              DateTime     @default(now())
   updatedAt              DateTime     @updatedAt
 }
