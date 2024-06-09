@@ -49,6 +49,8 @@ const UserController: UserController = {
           middleName: userData?.middleName,
           lastName: userData?.lastName,
           email: userData?.email,
+          residentDistrictId: userData?.residentDistrictId,
+          residentSectorId: userData?.residentSectorId,
           phoneNumber: userData?.phoneNumber,
           whatsappNumber: userData?.whatsappNumber,
           genderName: userData?.genderName,

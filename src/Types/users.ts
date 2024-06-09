@@ -8,6 +8,8 @@ export interface User {
     whatsappNumber: string;
     genderName: string;
     nearestLandmark: string;
+    residentDistrictId: string;
+    residentSectorId:string;
     cohortId: number;
     track: string;
     organizationFoundedId: number;
