@@ -5,16 +5,17 @@ import {
   getDistricts,
   getSector,
   getSectors,
+  getSectorsByDistrict,
 } from "../controllers/DataControllers/LocationController";
 import { getCohorts } from "../controllers/DataControllers/CohortController";
 
 const router = Router();
 
 router.get("/genders", getGenders);
-router.get("/cohorts", getCohorts);
 router.get("/districts", getDistricts);
+router.get("/cohorts", getCohorts);
 router.get("/district/:districtId", getDistrict);
-router.get("/district/sector/:districtId", getDistrict);
+router.get("/district/sector/:districtName", getSectorsByDistrict);
 router.get("/sectors", getSectors);
 router.get("/sector/:sectorId", getSector);
 

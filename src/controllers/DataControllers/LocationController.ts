@@ -54,7 +54,7 @@ export const getSector = async (req: Request, res: Response) => {
 };
 
 export const getSectorsByDistrict = async (req: Request, res: Response) => {
-  const districtName = req.headers.districtName as string;
+  const districtName = req.params.districtName as string;
   try {
     const sectors = await prisma.sector.findMany({
       where: {
