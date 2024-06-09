@@ -16,7 +16,7 @@ const UserController: UserController = {
   getAllUsers: async (req, res) => {
     try {
       const users = await prisma.user.findMany();
-      // return res.status(200).json({ message: 'List of all users' });
+
       return res.status(200).json({
         message: "List of all users",
         data: users,
