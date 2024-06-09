@@ -21,7 +21,7 @@ CREATE TABLE "Cohort" (
 
 -- CreateTable
 CREATE TABLE "District" (
-    "id" SERIAL NOT NULL,
+    "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE "District" (
 
 -- CreateTable
 CREATE TABLE "Sector" (
-    "id" SERIAL NOT NULL,
+    "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "districtName" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -45,8 +45,8 @@ CREATE TABLE "Organization" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "workingSector" TEXT NOT NULL,
-    "districtName" TEXT NOT NULL,
-    "sectorId" INTEGER NOT NULL,
+    "districtId" TEXT NOT NULL,
+    "sectorId" TEXT NOT NULL,
     "website" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -62,6 +62,8 @@ CREATE TABLE "User" (
     "lastName" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "phoneNumber" TEXT NOT NULL,
+    "residentDistrictId" TEXT NOT NULL,
+    "residentSectorId" TEXT NOT NULL,
     "whatsappNumber" TEXT NOT NULL,
     "genderName" TEXT NOT NULL,
     "nearestLandmark" TEXT NOT NULL,
@@ -71,6 +73,7 @@ CREATE TABLE "User" (
     "positionInFounded" TEXT NOT NULL,
     "organizationEmployedId" INTEGER NOT NULL,
     "positionInEmployed" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -101,14 +104,23 @@ CREATE UNIQUE INDEX "Organization_id_key" ON "Organization"("id");
 -- CreateIndex
 CREATE UNIQUE INDEX "User_id_key" ON "User"("id");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
 -- AddForeignKey
 ALTER TABLE "Sector" ADD CONSTRAINT "Sector_districtName_fkey" FOREIGN KEY ("districtName") REFERENCES "District"("name") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Organization" ADD CONSTRAINT "Organization_districtName_fkey" FOREIGN KEY ("districtName") REFERENCES "District"("name") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Organization" ADD CONSTRAINT "Organization_districtId_fkey" FOREIGN KEY ("districtId") REFERENCES "District"("name") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Organization" ADD CONSTRAINT "Organization_sectorId_fkey" FOREIGN KEY ("sectorId") REFERENCES "Sector"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "User" ADD CONSTRAINT "User_residentDistrictId_fkey" FOREIGN KEY ("residentDistrictId") REFERENCES "District"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "User" ADD CONSTRAINT "User_residentSectorId_fkey" FOREIGN KEY ("residentSectorId") REFERENCES "Sector"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "User" ADD CONSTRAINT "User_genderName_fkey" FOREIGN KEY ("genderName") REFERENCES "Gender"("name") ON DELETE RESTRICT ON UPDATE CASCADE;
