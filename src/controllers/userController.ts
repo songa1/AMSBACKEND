@@ -1,6 +1,6 @@
-import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
-import { User } from '../Types/users';
+import { Request, Response } from "express";
+import { PrismaClient } from "@prisma/client";
+import { User } from "../Types/users";
 
 const prisma = new PrismaClient();
 
@@ -17,11 +17,13 @@ const UserController: UserController = {
     try {
       const users = await prisma.user.findMany();
       // return res.status(200).json({ message: 'List of all users' });
-      return res
-        .status(200)
-        .json({ message: "List of all users", data: users, count: users.length });
+      return res.status(200).json({
+        message: "List of all users",
+        data: users,
+        count: users.length,
+      });
     } catch (error) {
-      return res.status(500).json({ error: 'Internal Server Error' });
+      return res.status(500).json({ error: "Internal Server Error" });
     }
   },
 
@@ -32,17 +34,26 @@ const UserController: UserController = {
         where: { id: userId },
       });
       if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+        return res.status(404).json({ error: "User not found" });
       }
       return res.json(user);
     } catch (error) {
-      return res.status(500).json({ error: 'Internal Server Error' });
+      return res.status(500).json({ error: "Internal Server Error" });
     }
   },
 
   createUser: async (req, res) => {
-    const userData: User = await req.body;
+    const userData = await req.body.user;
+    const organizationFounded = await req.body.organizationFounded;
+    const organizationEmployed = await req.body.organizationEmployed;
     try {
+      const organizationEmployedCreate = await prisma.organization.create({
+        data: organizationEmployed,
+      });
+      const organizationFoundedCreate = await prisma.organization.create({
+        data: organizationFounded,
+      });
+
       const createdUser = await prisma.user.create({
         data: {
           firstName: userData?.firstName,
@@ -57,12 +68,12 @@ const UserController: UserController = {
           nearestLandmark: userData?.nearestLandmark,
           cohortId: userData?.cohortId,
           track: userData?.track,
-          organizationFoundedId: userData?.organizationFoundedId,
+          organizationFoundedId: organizationFoundedCreate?.id,
           positionInFounded: userData?.positionInFounded,
-          organizationEmployedId: userData?.organizationEmployedId,
+          organizationEmployedId: organizationEmployedCreate?.id,
           positionInEmployed: userData?.positionInEmployed,
           password: userData?.password,
-          createdAt: new Date()
+          createdAt: new Date(),
         },
       });
 
@@ -70,8 +81,8 @@ const UserController: UserController = {
         .status(200)
         .json({ message: "User created succesfully", data: createdUser });
     } catch (error: any) {
-      console.log(error)
-      return res.status(500).json({ error: 'Internal Server Error' });
+      console.log(error);
+      return res.status(500).json({ error: "Internal Server Error" });
     }
   },
 
@@ -85,7 +96,7 @@ const UserController: UserController = {
       });
       return res.json(updatedUser);
     } catch (error) {
-      return res.status(500).json({ error: 'Internal Server Error' });
+      return res.status(500).json({ error: "Internal Server Error" });
     }
   },
 
@@ -97,10 +108,9 @@ const UserController: UserController = {
       });
       return res.status(204).send();
     } catch (error) {
-      return res.status(500).json({ error: 'Internal Server Error' });
+      return res.status(500).json({ error: "Internal Server Error" });
     }
   },
 };
 
 export default UserController;
-
