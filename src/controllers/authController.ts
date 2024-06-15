@@ -67,7 +67,7 @@ const AuthController: AuthController = {
             message:
               "Click on this link to reset your password, " +
               process.env.FRONTEND_URL +
-              "/reset-password?token=" +
+              "/reset-password/" +
               updatedUser.refreshToken,
           });
           if (email.status === 200) {
