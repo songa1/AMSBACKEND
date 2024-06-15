@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import { User } from "../Types/users";
+import sendEmail from "../helpers/sendMail";
 
 const prisma = new PrismaClient();
 
@@ -88,14 +89,55 @@ const UserController: UserController = {
 
   updateUser: async (req, res) => {
     const { userId } = req.params;
-    const userData = req.body;
+    const { user: userData } = req.body;
+    const { id: foundedId, ...organizationFounded } = await req.body.organizationFounded;
+    const { id: employedId, ...organizationEmployed } = await req.body.organizationEmployed;
+
     try {
+      const organizationEmployedCreate = await prisma.organization.update({
+        where: { id: employedId },
+        data: organizationEmployed,
+      });
+      const organizationFoundedCreate = await prisma.organization.update({
+        where: { id: foundedId },
+        data: organizationFounded,
+      });
+
       const updatedUser = await prisma.user.update({
         where: { id: userId },
-        data: userData,
+
+        data: {
+          firstName: userData?.firstName,
+          middleName: userData?.middleName,
+          lastName: userData?.lastName,
+          email: userData?.email,
+          residentDistrictId: userData?.residentDistrictId,
+          residentSectorId: userData?.residentSectorId,
+          phoneNumber: userData?.phoneNumber,
+          whatsappNumber: userData?.whatsappNumber,
+          genderName: userData?.genderName,
+          nearestLandmark: userData?.nearestLandmark,
+          cohortId: userData?.cohortId,
+          track: userData?.track,
+          organizationFoundedId: organizationFoundedCreate?.id,
+          positionInFounded: userData?.positionInFounded,
+          organizationEmployedId: organizationEmployedCreate?.id,
+          positionInEmployed: userData?.positionInEmployed,
+          password: userData?.password,
+          updatedAt: new Date(),
+        },
       });
-      return res.json(updatedUser);
-    } catch (error) {
+
+      if (updatedUser) {
+        const email = await sendEmail({ subject: "Profile updated successfully!", name: updatedUser?.firstName, message: "Your profile has been updated", receiver: updatedUser?.email })
+
+        return res.status(201).json({ message: "User updated successfully!", user: updatedUser, ...email });
+
+      } else {
+        return res.status(201).json({ status: 500, message: "Updating user failed!" });
+      }
+    } catch (error: any) {
+      console.log(error.message)
       return res.status(500).json({ error: "Internal Server Error" });
     }
   },
