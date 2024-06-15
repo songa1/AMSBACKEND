@@ -7,16 +7,16 @@ export interface User {
   phoneNumber: string;
   whatsappNumber: string;
   genderName: string;
-  nearestLandmark: string;
-  residentDistrictId: string;
-  residentSectorId: string;
-  cohortId: number;
-  track: string;
-  organizationFoundedId: number;
-  positionInFounded: string;
-  organizationEmployedId: number;
-  positionInEmployed: string;
-  password: string;
+  nearestLandmark: string | null;
+  residentDistrictId: string | null;
+  residentSectorId: string | null;
+  cohortId: number | null;
+  track: string | null;
+  organizationFoundedId: number | null;
+  positionInFounded: string | null;
+  organizationEmployedId: number | null;
+  positionInEmployed: string | null;
+  password: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
