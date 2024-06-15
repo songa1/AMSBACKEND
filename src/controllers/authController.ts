@@ -26,8 +26,21 @@ const AuthController: AuthController = {
       if (!passwordMatch) {
         return res.status(401).json({ error: "Invalid credentials" });
       }
-      // Here you can generate and send JWT token
-      return res.status(200).json({ message: "Login successful" });
+
+      const token = await generateToken(user);
+
+      const updatedUser = await prisma.user.update({
+        where: { id: user.id },
+        data: { token },
+      });
+
+      if (updatedUser) {
+        return res
+          .status(200)
+          .json({ status: 200, message: "Login successful", token, user });
+      } else {
+        return res.status(500).json({ status: 500, message: "Login failed" });
+      }
     } catch (error) {
       return res.status(500).json({ error: "Internal Server Error" });
     }
@@ -95,9 +108,26 @@ const AuthController: AuthController = {
       const hashedPassword = await hashPassword(newPassword);
       await prisma.user.update({
         where: { id: user.id },
-        data: { password: hashedPassword },
+        data: { password: hashedPassword, refreshToken: null },
       });
-      return res.status(201).json({ message: "Password reset successful" });
+
+      const email = await sendEmail({
+        receiver: user.email,
+        subject: "Password Reset Successful",
+        name: user?.firstName,
+        message: "Your password has been changed successfully!",
+      });
+      if (email.status === 200) {
+        return res.status(201).json({
+          message: "Password changed successfully, you can log in now!",
+          ...email,
+        });
+      } else {
+        return res.status(500).json({
+          message: "Failed to send the email!",
+          ...email,
+        });
+      }
     } catch (error: any) {
       console.log(error?.message);
       return res.status(500).json({ error: "Internal Server Error" });
