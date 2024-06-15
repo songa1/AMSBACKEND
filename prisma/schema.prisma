@@ -61,32 +61,32 @@ model Organization {
 }
 
 model User {
-  id                     String       @id @unique @default(uuid())
+  id                     String        @id @unique @default(uuid())
   firstName              String
   middleName             String
   lastName               String
-  email                  String       @unique
+  email                  String        @unique
   phoneNumber            String
-  residentDistrictId     String
-  residentDistrict       District     @relation(fields: [residentDistrictId], references: [id])
-  residentSectorId       String
-  residentSector         Sector       @relation(fields: [residentSectorId], references: [id])
+  residentDistrictId     String?
+  residentDistrict       District?     @relation(fields: [residentDistrictId], references: [id])
+  residentSectorId       String?
+  residentSector         Sector?       @relation(fields: [residentSectorId], references: [id])
   whatsappNumber         String
   genderName             String
-  gender                 Gender       @relation(references: [name], fields: [genderName])
-  nearestLandmark        String
-  cohortId               Int
-  cohort                 Cohort       @relation(references: [id], fields: [cohortId])
-  track                  String
-  organizationFoundedId  Int
-  organizationFounded    Organization @relation("FoundedOrganization", references: [id], fields: [organizationFoundedId])
-  positionInFounded      String
-  organizationEmployedId Int
-  organizationEmployed   Organization @relation("EmployedOrganization", references: [id], fields: [organizationEmployedId])
-  positionInEmployed     String
-  password               String
-  token                  String?
+  gender                 Gender        @relation(references: [name], fields: [genderName])
+  nearestLandmark        String?
+  cohortId               Int?
+  cohort                 Cohort?       @relation(references: [id], fields: [cohortId])
+  track                  String?
+  organizationFoundedId  Int?
+  organizationFounded    Organization? @relation("FoundedOrganization", references: [id], fields: [organizationFoundedId])
+  positionInFounded      String?
+  organizationEmployedId Int?
+  organizationEmployed   Organization? @relation("EmployedOrganization", references: [id], fields: [organizationEmployedId])
+  positionInEmployed     String?
+  password               String        @default("pass")
   refreshToken           String?
-  createdAt              DateTime     @default(now())
-  updatedAt              DateTime     @updatedAt
+  token                  String?
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
 }
