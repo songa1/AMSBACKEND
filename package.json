@@ -10,7 +10,7 @@
     "dev": "nodemon src/index.ts",
     "start": "npm run build && node dist/index.js",
     "migrate": "prisma migrate dev --name init",
-    "seed": "node dist/prisma/seeders/index.js"
+    "seed": "node src/prisma/seeders/index.ts"
   },
   "repository": {
     "type": "git",
