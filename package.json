@@ -8,9 +8,9 @@
     "build:clean": "rm -f -R dist",
     "build": "npm run build:clean && tsc",
     "dev": "nodemon src/index.ts",
-    "start": "npm run build && node dist/index.js",
+    "start": "node dist/index.js",
     "migrate": "prisma migrate dev --name init",
-    "seed": "ts-node prisma/seeders/index.ts"
+    "seed": "node dist/prisma/seeders/index.js"
   },
   "repository": {
     "type": "git",
