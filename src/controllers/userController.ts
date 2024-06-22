@@ -18,7 +18,17 @@ interface UserController {
 const UserController: UserController = {
   getAllUsers: async (req, res) => {
     try {
-      const users = await prisma.user.findMany();
+      const users = await prisma.user.findMany({
+        include: {
+          residentDistrict: true,
+          residentSector: true,
+          sentMessages: true,
+          organizationEmployed: true,
+          organizationFounded: true,
+          gender: true,
+          cohort: true,
+        },
+      });
 
       return res.status(200).json({
         message: "List of all users",
@@ -35,6 +45,15 @@ const UserController: UserController = {
     try {
       const user = await prisma.user.findUnique({
         where: { id: userId },
+        include: {
+          residentDistrict: true,
+          residentSector: true,
+          sentMessages: true,
+          organizationEmployed: true,
+          organizationFounded: true,
+          gender: true,
+          cohort: true,
+        },
       });
       if (!user) {
         return res.status(404).json({ error: "User not found" });
@@ -123,6 +142,7 @@ const UserController: UserController = {
     const { users } = req.body;
 
     try {
+      console.log(users);
       const createdUsers = await Promise.all(
         users.map(async (user: User) => {
           const existingUser = await prisma.user.findUnique({
@@ -158,9 +178,11 @@ const UserController: UserController = {
 
       const filteredUsers = createdUsers.filter((user) => user !== null);
 
-      return res
-        .status(201)
-        .json({ message: "Users created successfully", data: filteredUsers });
+      return res.status(201).json({
+        status: 201,
+        message: "Users created successfully",
+        data: filteredUsers,
+      });
     } catch (error: any) {
       console.error(error);
       return res.status(500).json({ error: "Internal Server Error" });
