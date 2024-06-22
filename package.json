@@ -8,7 +8,8 @@
     "build": "npm run build:clean && tsc",
     "dev": "nodemon src/index.ts",
     "start": "node dist/src/index.js",
-    "migrate": "prisma migrate dev --name init",
+    "migrate": "prisma migrate",
+    "migrate:dev": "prisma migrate dev --name init",
     "seed": "node dist/prisma/seeders/index.js"
   },
   "repository": {
