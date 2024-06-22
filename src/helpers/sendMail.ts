@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const loadTemplate = (templateName: string, replacements: any) => {
-  const filePath = path.join(__dirname, `./templates/${templateName}.html`);
+  const filePath = path.join(`./templates/${templateName}.html`);
   const source = fs.readFileSync(filePath, "utf-8").toString();
   const template = handlebars.compile(source);
   const htmlToSend = template(replacements);
