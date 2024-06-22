@@ -73,7 +73,7 @@ model User {
   residentSector         Sector?       @relation(fields: [residentSectorId], references: [id])
   whatsappNumber         String
   genderName             String?
-  gender                 Gender?        @relation(references: [name], fields: [genderName])
+  gender                 Gender?       @relation(references: [name], fields: [genderName])
   nearestLandmark        String?
   cohortId               Int?
   cohort                 Cohort?       @relation(references: [id], fields: [cohortId])
@@ -89,4 +89,17 @@ model User {
   token                  String?
   createdAt              DateTime      @default(now())
   updatedAt              DateTime      @updatedAt
+  sentMessages           Message[]     @relation("sender")
+  // receivedMessages       Message[]     @relation("receiver")
+}
+
+model Message {
+  id        String   @id @unique @default(uuid())
+  message   String
+  sender    User     @relation("sender", references: [id], fields: [senderId])
+  senderId  String
+  // receiverId            String
+  // receiver              User     @relation("receiver", references: [id], fields: [receiverId])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
