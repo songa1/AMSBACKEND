@@ -15,23 +15,31 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const loadTemplate = (templateName: string, replacements: any) => {
-  const filePath = path.join(`${templateName}.html`);
-  const source = fs.readFileSync(filePath, "utf-8").toString();
-  const template = handlebars.compile(source);
-  const htmlToSend = template(replacements);
-  return htmlToSend;
-};
+// const loadTemplate = (templateName: string, replacements: any) => {
+//   const filePath = path.join(`${templateName}.html`);
+//   const source = fs.readFileSync(filePath, "utf-8").toString();
+//   const template = handlebars.compile(source);
+//   const htmlToSend = template(replacements);
+//   return htmlToSend;
+// };
 
 async function sendEmail(replacements: Email) {
-  const htmlTemplate = loadTemplate("emailTemplate", replacements);
+  // const htmlTemplate = loadTemplate("emailTemplate", replacements);
 
   try {
     const info = await transporter.sendMail({
       from: `"Alumni Management System" <${process.env.EMAIL_USERNAME}>`,
       to: replacements?.receiver,
       subject: replacements?.subject,
-      html: htmlTemplate,
+      html: `<html>
+      <body>
+        <div>
+          <h1>Hello, ${replacements?.name}</h1>
+          <p>${replacements?.message}</p>
+        </div>
+      </body>
+    </html>
+    `,
     });
 
     return { status: 200, messageId: info.messageId };
