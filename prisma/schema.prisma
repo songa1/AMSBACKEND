@@ -72,8 +72,8 @@ model User {
   residentSectorId       String?
   residentSector         Sector?       @relation(fields: [residentSectorId], references: [id])
   whatsappNumber         String
-  genderName             String
-  gender                 Gender        @relation(references: [name], fields: [genderName])
+  genderName             String?
+  gender                 Gender?        @relation(references: [name], fields: [genderName])
   nearestLandmark        String?
   cohortId               Int?
   cohort                 Cohort?       @relation(references: [id], fields: [cohortId])

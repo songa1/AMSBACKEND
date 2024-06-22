@@ -6,7 +6,7 @@ export interface User {
   email: string;
   phoneNumber: string;
   whatsappNumber: string;
-  genderName: string;
+  genderName: string | null;
   nearestLandmark: string | null;
   residentDistrictId: string | null;
   residentSectorId: string | null;
