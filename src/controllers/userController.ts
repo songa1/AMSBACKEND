@@ -46,9 +46,19 @@ const UserController: UserController = {
   },
 
   createUser: async (req, res) => {
-    const { user, organizationFounded, organizationEmployed } = req.body; // Destructure req.body directly
+    const { user, organizationFounded, organizationEmployed } = req.body;
 
     try {
+      const userExisting = await prisma.user.findFirst({
+        where: { email: user?.email },
+      });
+
+      if (userExisting) {
+        return res
+          .status(409)
+          .json({ error: "User with this email already exists" });
+      }
+
       const organizationFoundedCreate = await prisma.organization.create({
         data: organizationFounded,
       });
@@ -57,7 +67,7 @@ const UserController: UserController = {
         data: organizationEmployed,
       });
 
-      const refreshToken = await generateToken(user)
+      const refreshToken = await generateToken(user);
 
       const createdUser = await prisma.user.create({
         data: {
@@ -84,9 +94,22 @@ const UserController: UserController = {
       });
 
       if (createdUser) {
-        const email = await sendEmail({ subject: "Your profile created successfully!", name: createdUser.firstName, message: "Your profile has been created on AMS. Use this link to set the password: " + process.env.FRONTEND_URL + "/reset-password/" + createdUser.refreshToken, receiver: createdUser.email });
+        const email = await sendEmail({
+          subject: "Your profile created successfully!",
+          name: createdUser.firstName,
+          message:
+            "Your profile has been created on AMS. Use this link to set the password: " +
+            process.env.FRONTEND_URL +
+            "/reset-password/" +
+            createdUser.refreshToken,
+          receiver: createdUser.email,
+        });
 
-        return res.status(201).json({ message: "User created successfully", user: createdUser, ...email });
+        return res.status(201).json({
+          message: "User created successfully",
+          user: createdUser,
+          ...email,
+        });
       } else {
         return res.status(500).json({ message: "Create user failed" });
       }
@@ -102,18 +125,19 @@ const UserController: UserController = {
     try {
       const createdUsers = await Promise.all(
         users.map(async (user: User) => {
-          // Check if user with same email exists
           const existingUser = await prisma.user.findUnique({
             where: { email: user.email },
           });
 
           if (existingUser) {
-            // Handle duplicate email (skip or log)
-            console.log(`User with email ${user.email} already exists. Skipping.`);
-            return null; // Or handle as needed
+            console.log(
+              `User with email ${user.email} already exists. Skipping.`
+            );
+            return res.status(409).send({
+              message: `User with email ${user.email} already exists.`,
+            });
           }
 
-          // Create user if email doesn't exist
           const createdUser = await prisma.user.create({
             data: {
               firstName: user.firstName,
@@ -132,16 +156,16 @@ const UserController: UserController = {
         })
       );
 
-      // Filter out null values (skipped users due to duplicates)
       const filteredUsers = createdUsers.filter((user) => user !== null);
 
-      return res.status(200).json({ message: "Users created successfully", data: filteredUsers });
+      return res
+        .status(201)
+        .json({ message: "Users created successfully", data: filteredUsers });
     } catch (error: any) {
       console.error(error);
       return res.status(500).json({ error: "Internal Server Error" });
     }
   },
-
 
   updateUser: async (req, res) => {
     const { userId } = req.params;
@@ -183,9 +207,18 @@ const UserController: UserController = {
       });
 
       if (updatedUser) {
-        const email = await sendEmail({ subject: "Profile updated successfully!", name: updatedUser.firstName, message: "Your profile has been updated", receiver: updatedUser.email });
+        const email = await sendEmail({
+          subject: "Profile updated successfully!",
+          name: updatedUser.firstName,
+          message: "Your profile has been updated",
+          receiver: updatedUser.email,
+        });
 
-        return res.status(201).json({ message: "User updated successfully", user: updatedUser, ...email });
+        return res.status(201).json({
+          message: "User updated successfully",
+          user: updatedUser,
+          ...email,
+        });
       } else {
         return res.status(500).json({ message: "Updating user failed" });
       }
@@ -199,8 +232,8 @@ const UserController: UserController = {
     const { userId } = req.params;
     try {
       const user = await prisma.user.findUnique({
-        where: { id: userId }
-      })
+        where: { id: userId },
+      });
       if (user) {
         const deleted = await prisma.user.delete({
           where: { id: userId },
@@ -220,4 +253,3 @@ const UserController: UserController = {
 };
 
 export default UserController;
-
