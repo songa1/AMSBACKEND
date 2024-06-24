@@ -20,12 +20,21 @@ const UserController: UserController = {
     try {
       const users = await prisma.user.findMany({
         include: {
+          organizationEmployed: {
+            include: {
+              district: true,
+              sector: true,
+            },
+          },
+          organizationFounded: {
+            include: {
+              district: true,
+              sector: true,
+            },
+          },
+          gender: true,
           residentDistrict: true,
           residentSector: true,
-          sentMessages: true,
-          organizationEmployed: true,
-          organizationFounded: true,
-          gender: true,
           cohort: true,
         },
       });
@@ -46,12 +55,21 @@ const UserController: UserController = {
       const user = await prisma.user.findUnique({
         where: { id: userId },
         include: {
+          organizationEmployed: {
+            include: {
+              district: true,
+              sector: true,
+            },
+          },
+          organizationFounded: {
+            include: {
+              district: true,
+              sector: true,
+            },
+          },
+          gender: true,
           residentDistrict: true,
           residentSector: true,
-          sentMessages: true,
-          organizationEmployed: true,
-          organizationFounded: true,
-          gender: true,
           cohort: true,
         },
       });

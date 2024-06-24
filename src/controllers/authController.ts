@@ -18,6 +18,24 @@ const AuthController: AuthController = {
     try {
       const user = await prisma.user.findUnique({
         where: { email },
+        include: {
+          organizationEmployed: {
+            include: {
+              district: true,
+              sector: true,
+            },
+          },
+          organizationFounded: {
+            include: {
+              district: true,
+              sector: true,
+            },
+          },
+          gender: true,
+          residentDistrict: true,
+          residentSector: true,
+          cohort: true,
+        },
       });
       if (!user) {
         return res.status(401).json({ error: "Invalid credentials" });
