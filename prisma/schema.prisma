@@ -61,36 +61,37 @@ model Organization {
 }
 
 model User {
-  id                     String        @id @unique @default(uuid())
+  id                     String          @id @unique @default(uuid())
   firstName              String
   middleName             String
   lastName               String
-  email                  String        @unique
+  email                  String          @unique
   phoneNumber            String
   residentDistrictId     String?
-  residentDistrict       District?     @relation(fields: [residentDistrictId], references: [id])
+  residentDistrict       District?       @relation(fields: [residentDistrictId], references: [id])
   residentSectorId       String?
-  residentSector         Sector?       @relation(fields: [residentSectorId], references: [id])
+  residentSector         Sector?         @relation(fields: [residentSectorId], references: [id])
   whatsappNumber         String
   genderName             String?
-  gender                 Gender?       @relation(references: [name], fields: [genderName])
+  gender                 Gender?         @relation(references: [name], fields: [genderName])
   nearestLandmark        String?
   cohortId               Int?
-  cohort                 Cohort?       @relation(references: [id], fields: [cohortId])
+  cohort                 Cohort?         @relation(references: [id], fields: [cohortId])
   track                  String?
   organizationFoundedId  Int?
-  organizationFounded    Organization? @relation("FoundedOrganization", references: [id], fields: [organizationFoundedId])
+  organizationFounded    Organization?   @relation("FoundedOrganization", references: [id], fields: [organizationFoundedId])
   positionInFounded      String?
   organizationEmployedId Int?
-  organizationEmployed   Organization? @relation("EmployedOrganization", references: [id], fields: [organizationEmployedId])
+  organizationEmployed   Organization?   @relation("EmployedOrganization", references: [id], fields: [organizationEmployedId])
   positionInEmployed     String?
-  password               String        @default("pass")
+  password               String          @default("pass")
   refreshToken           String?
   token                  String?
-  createdAt              DateTime      @default(now())
-  updatedAt              DateTime      @updatedAt
-  sentMessages           Message[]     @relation("sender")
+  createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt
+  sentMessages           Message[]       @relation("sender")
   // receivedMessages       Message[]     @relation("receiver")
+  Notifications          Notifications[]
 }
 
 model Message {
@@ -98,8 +99,17 @@ model Message {
   message   String
   sender    User     @relation("sender", references: [id], fields: [senderId])
   senderId  String
-  // receiverId            String
-  // receiver              User     @relation("receiver", references: [id], fields: [receiverId])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Notifications {
+  id         String   @id @unique @default(uuid())
+  message    String
+  title      String
+  receiver   User?    @relation(references: [id], fields: [receiverId])
+  receiverId String?
+  opened     Boolean
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
