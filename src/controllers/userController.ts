@@ -142,6 +142,18 @@ const UserController: UserController = {
           receiver: createdUser.email,
         });
 
+        const notification = {
+          title: "ACCOUNT: Your new account has been created!",
+          message: `<p>Hi ${user?.firstName},<br><p>Welcome aboard! Your account has been created and now you can start engaging with others through chats, and update your  profile from time to time!</p><p>Here's what you can do:</p><ul><li>Participate in conversations,</li><li>Monitor and update your profile,</li></ul><p>Again, you are most welcome, if you have any question, don't hesitate to contact the admin!</p><div><a href='/dashboard/chat'>Join Conversation</a><a href='/dashboard/profile'>View Profile</a></div><p>We hope you keep having a great time.</p><p>Best Regards,<br>The Admin</p>`,
+          receiverId: createdUser?.id,
+          opened: false,
+          createdAt: new Date(),
+        };
+
+        await prisma.notifications.create({
+          data: notification,
+        });
+
         return res.status(201).json({
           message: "User created successfully",
           user: createdUser,
@@ -188,6 +200,18 @@ const UserController: UserController = {
               track: user.track,
               createdAt: new Date(),
             },
+          });
+
+          const notification = {
+            title: "ACCOUNT: Your new account has been created!",
+            message: `<p>Hi ${user?.firstName},<br><p>Welcome aboard! Your account has been created and now you can start engaging with others through chats, and update your  profile from time to time!</p><p>Here's what you can do:</p><ul><li>Participate in conversations,</li><li>Monitor and update your profile,</li></ul><p>Again, you are most welcome, if you have any question, don't hesitate to contact the admin!</p><div><a href='/dashboard/chat'>Join Conversation</a><a href='/dashboard/profile'>View Profile</a></div><p>We hope you keep having a great time.</p><p>Best Regards,<br>The Admin</p>`,
+            receiverId: createdUser?.id,
+            opened: false,
+            createdAt: new Date(),
+          };
+
+          await prisma.notifications.create({
+            data: notification,
           });
 
           return createdUser;
@@ -254,6 +278,18 @@ const UserController: UserController = {
           receiver: updatedUser.email,
         });
 
+        const notification = {
+          title: "UPDATED: Your new account has been updated!",
+          message: `<p>Hi ${user?.firstName},<br><p>Your profile has been updated successfully! It's important to keep your information up to date to help us help you!</p><p>Here's what you can do now:</p><ul><li>Participate in conversations,</li><li>Monitor and update your profile,</li></ul><p>Again, thank you for updating your profile, if you have any question, don't hesitate to contact the admin!</p><div><a href='/dashboard/chat'>Join Conversation</a><a href='/dashboard/profile'>View Profile</a></div><p>We hope you keep having a great time.</p><p>Best Regards,<br>The Admin</p>`,
+          receiverId: updatedUser?.id,
+          opened: false,
+          createdAt: new Date(),
+        };
+
+        await prisma.notifications.create({
+          data: notification,
+        });
+
         return res.status(201).json({
           message: "User updated successfully",
           user: updatedUser,
@@ -287,6 +323,7 @@ const UserController: UserController = {
         return res.status(404).json({ error: "User not found!" });
       }
     } catch (error) {
+      console.log(error);
       return res.status(500).json({ error: "Internal Server Error" });
     }
   },
