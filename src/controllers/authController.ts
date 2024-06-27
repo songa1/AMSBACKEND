@@ -8,8 +8,10 @@ const prisma = new PrismaClient();
 
 interface AuthController {
   login(req: Request, res: Response): Promise<Response>;
+  logout(req: Request, res: Response): Promise<Response>;
   requestLink(req: Request, res: Response): Promise<Response>;
   resetPassword(req: Request, res: Response): Promise<Response>;
+  changePassword(req: Request, res: Response): Promise<Response>;
 }
 
 const AuthController: AuthController = {
@@ -58,6 +60,71 @@ const AuthController: AuthController = {
           .json({ status: 200, message: "Login successful", token, user });
       } else {
         return res.status(500).json({ status: 500, message: "Login failed" });
+      }
+    } catch (error) {
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
+
+  changePassword: async (req, res) => {
+    const { userId, pastPassword, password } = req.body;
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+      });
+      if (!user) {
+        return res.status(401).json({ error: "User do not exist" });
+      }
+      const passwordMatch = await bcrypt.compare(pastPassword, user.password);
+      if (!passwordMatch) {
+        return res
+          .status(401)
+          .json({ error: "Enter correct password, or use forgot password!" });
+      }
+
+      const newPassword = await hashPassword(password);
+
+      const updatedUser = await prisma.user.update({
+        where: { id: user.id },
+        data: { password: newPassword, token: null, refreshToken: null },
+      });
+
+      if (updatedUser) {
+        return res.status(200).json({
+          status: 200,
+          message: "Password change is successful",
+        });
+      } else {
+        return res
+          .status(500)
+          .json({ status: 500, message: "Password change failed" });
+      }
+    } catch (error) {
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
+
+  logout: async (req, res) => {
+    const { userId, token } = req.body;
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: userId, token },
+      });
+      if (!user) {
+        return res.status(401).json({ error: "User do not exist!" });
+      }
+
+      const updatedUser = await prisma.user.update({
+        where: { id: user.id },
+        data: { token: null, refreshToken: null },
+      });
+
+      if (updatedUser) {
+        return res
+          .status(200)
+          .json({ status: 200, message: "Logout successful" });
+      } else {
+        return res.status(500).json({ status: 500, message: "Logout failed" });
       }
     } catch (error) {
       return res.status(500).json({ error: "Internal Server Error" });
