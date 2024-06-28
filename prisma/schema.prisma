@@ -74,6 +74,8 @@ model User {
   whatsappNumber         String
   genderName             String?
   gender                 Gender?         @relation(references: [name], fields: [genderName])
+  roleId                 String?         @default("12")
+  role                   Role?           @relation(references: [id], fields: [roleId])
   nearestLandmark        String?
   cohortId               Int?
   cohort                 Cohort?         @relation(references: [id], fields: [cohortId])
@@ -90,15 +92,14 @@ model User {
   createdAt              DateTime        @default(now())
   updatedAt              DateTime        @updatedAt
   sentMessages           Message[]       @relation("sender")
-  // receivedMessages       Message[]     @relation("receiver")
   Notifications          Notifications[]
 }
 
 model Message {
   id        String   @id @unique @default(uuid())
   message   String
-  sender    User     @relation("sender", references: [id], fields: [senderId])
-  senderId  String
+  sender    User?    @relation("sender", references: [id], fields: [senderId])
+  senderId  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -112,4 +113,12 @@ model Notifications {
   opened     Boolean
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+model Role {
+  id        String   @id @unique @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User[]
 }

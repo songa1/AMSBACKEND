@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 
 const prisma = new PrismaClient();
 
-const numbersController = async (req: Request, res: Response) => {
+export const numbersController = async (req: Request, res: Response) => {
   const users = await prisma.user.findMany();
   const notificationsUnopened = await prisma.notifications.findMany({
     where: { opened: false },
@@ -12,7 +12,10 @@ const numbersController = async (req: Request, res: Response) => {
   const messages = await prisma.message.findMany();
   const sentNotifications = await prisma.notifications.findMany();
 
-  res
-    .status(200)
-    .send({ users, notificationsUnopened, messages, sentNotifications });
+  res.status(200).send({
+    users: users?.length,
+    notificationsUnopened: notificationsUnopened?.length,
+    messages: messages.length,
+    sentNotifications: sentNotifications.length,
+  });
 };

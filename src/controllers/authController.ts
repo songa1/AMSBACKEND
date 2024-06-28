@@ -37,6 +37,7 @@ const AuthController: AuthController = {
           residentDistrict: true,
           residentSector: true,
           cohort: true,
+          role: true,
         },
       });
       if (!user) {

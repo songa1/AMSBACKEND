@@ -32,6 +32,7 @@ const UserController: UserController = {
               sector: true,
             },
           },
+          role: true,
           gender: true,
           residentDistrict: true,
           residentSector: true,
@@ -71,6 +72,7 @@ const UserController: UserController = {
           residentDistrict: true,
           residentSector: true,
           cohort: true,
+          role: true,
         },
       });
       if (!user) {
@@ -279,7 +281,7 @@ const UserController: UserController = {
         });
 
         const notification = {
-          title: "UPDATED: Your new account has been updated!",
+          title: "UPDATED: Your account has been updated!",
           message: `<p>Hi ${user?.firstName},<br><p>Your profile has been updated successfully! It's important to keep your information up to date to help us help you!</p><p>Here's what you can do now:</p><ul><li>Participate in conversations,</li><li>Monitor and update your profile,</li></ul><p>Again, thank you for updating your profile, if you have any question, don't hesitate to contact the admin!</p><div><a href='/dashboard/chat'>Join Conversation</a><a href='/dashboard/profile'>View Profile</a></div><p>We hope you keep having a great time.</p><p>Best Regards,<br>The Admin</p>`,
           receiverId: updatedUser?.id,
           opened: false,
