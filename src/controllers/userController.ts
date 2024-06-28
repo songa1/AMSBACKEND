@@ -273,13 +273,6 @@ const UserController: UserController = {
       });
 
       if (updatedUser) {
-        const email = await sendEmail({
-          subject: "Profile updated successfully!",
-          name: updatedUser.firstName,
-          message: "Your profile has been updated",
-          receiver: updatedUser.email,
-        });
-
         const notification = {
           title: "UPDATED: Your account has been updated!",
           message: `<p>Hi ${user?.firstName},<br><p>Your profile has been updated successfully! It's important to keep your information up to date to help us help you!</p><p>Here's what you can do now:</p><ul><li>Participate in conversations,</li><li>Monitor and update your profile,</li></ul><p>Again, thank you for updating your profile, if you have any question, don't hesitate to contact the admin!</p><div><a href='/dashboard/chat'>Join Conversation</a><a href='/dashboard/profile'>View Profile</a></div><p>We hope you keep having a great time.</p><p>Best Regards,<br>The Admin</p>`,
@@ -290,6 +283,13 @@ const UserController: UserController = {
 
         await prisma.notifications.create({
           data: notification,
+        });
+
+        const email = await sendEmail({
+          subject: notification.title,
+          name: updatedUser.firstName,
+          message: notification.message,
+          receiver: updatedUser.email,
         });
 
         return res.status(201).json({
