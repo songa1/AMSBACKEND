@@ -12,6 +12,8 @@ export interface User {
   residentSectorId: string | null;
   cohortId: number | null;
   track: string | null;
+  roleId: string | null;
+  role: Role | null;
   organizationFoundedId: number | null;
   positionInFounded: string | null;
   organizationEmployedId: number | null;
@@ -21,10 +23,16 @@ export interface User {
   updatedAt: Date;
 }
 
+export interface Role {
+  id: string;
+  name: string;
+}
+
 export interface Payload {
   firstName: string;
   lastName: string;
   phoneNumber: string;
   email: string;
+  role: Role;
   id: string;
 }

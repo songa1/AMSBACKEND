@@ -137,6 +137,9 @@ const AuthController: AuthController = {
     try {
       const user = await prisma.user.findUnique({
         where: { email },
+        include: {
+          role: true,
+        },
       });
       if (user) {
         const refreshToken = await generateToken(user);
