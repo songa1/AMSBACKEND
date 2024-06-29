@@ -236,17 +236,58 @@ const UserController: UserController = {
   updateUser: async (req, res) => {
     const { userId } = req.params;
     const { user, organizationFounded, organizationEmployed } = req.body;
+    let organizationFoundedUpdate: any;
+    let organizationEmployedUpdate: any;
+    let founded: any;
+    let employed: any;
 
     try {
-      const organizationFoundedUpdate = await prisma.organization.update({
-        where: { id: organizationFounded.id },
-        data: organizationFounded,
-      });
+      if (organizationEmployed.id !== "" || organizationFounded.id !== "") {
+        founded = await prisma.organization.findFirst({
+          where: { id: organizationFounded.id },
+        });
+        employed = await prisma.organization.findFirst({
+          where: { id: organizationEmployed.id },
+        });
+      } else if (!organizationFounded.id) {
+        founded = null;
+      } else if (!organizationEmployed.id) {
+        employed = null;
+      }
 
-      const organizationEmployedUpdate = await prisma.organization.update({
-        where: { id: organizationEmployed.id },
-        data: organizationEmployed,
-      });
+      if (founded) {
+        organizationFoundedUpdate = await prisma.organization.update({
+          where: { id: organizationFounded.id },
+          data: organizationFounded,
+        });
+      } else {
+        organizationFoundedUpdate = await prisma.organization.create({
+          data: {
+            name: organizationFounded?.name,
+            workingSector: organizationFounded?.workingSector,
+            districtId: organizationFounded?.districtId || undefined,
+            sectorId: organizationFounded?.sectorId || undefined,
+            website: organizationFounded?.website,
+          },
+        });
+      }
+
+      if (employed) {
+        organizationEmployedUpdate = await prisma.organization.update({
+          where: { id: organizationEmployed.id },
+          data: organizationEmployed,
+        });
+      } else {
+        organizationEmployedUpdate = await prisma.organization.create({
+          data: {
+            name: organizationEmployed?.name,
+            workingSector: organizationEmployed?.workingSector,
+            districtId: organizationEmployed?.districtId || undefined,
+            sectorId: organizationEmployed?.sectorId || undefined,
+            website: organizationEmployed?.website,
+          },
+        });
+      }
 
       const updatedUser = await prisma.user.update({
         where: { id: userId },
@@ -255,17 +296,17 @@ const UserController: UserController = {
           middleName: user.middleName,
           lastName: user.lastName,
           email: user.email,
-          residentDistrictId: user.residentDistrictId,
-          residentSectorId: user.residentSectorId,
+          residentDistrictId: user.residentDistrictId || undefined,
+          residentSectorId: user.residentSectorId || undefined,
           phoneNumber: user.phoneNumber,
           whatsappNumber: user.whatsappNumber,
-          genderName: user.genderName,
+          genderName: user.genderName || undefined,
           nearestLandmark: user.nearestLandmark,
-          cohortId: user.cohortId,
+          cohortId: user.cohortId || undefined,
           track: user.track,
-          organizationFoundedId: organizationFoundedUpdate.id,
+          organizationFoundedId: organizationFoundedUpdate?.id || undefined,
           positionInFounded: user.positionInFounded,
-          organizationEmployedId: organizationEmployedUpdate.id,
+          organizationEmployedId: organizationEmployedUpdate?.id || undefined,
           positionInEmployed: user.positionInEmployed,
           password: user.password,
           updatedAt: new Date(),
