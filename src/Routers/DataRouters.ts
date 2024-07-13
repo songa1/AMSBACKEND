@@ -8,10 +8,13 @@ import {
   getSectorsByDistrict,
 } from "../controllers/DataControllers/LocationController";
 import { getCohorts } from "../controllers/DataControllers/CohortController";
+import { getTracks } from "../controllers/DataControllers/TrackController";
 
 const router = Router();
 
 router.get("/genders", getGenders);
+router.get("/tracks", getTracks);
+router.get("/working-sectors", getTracks);
 router.get("/districts", getDistricts);
 router.get("/cohorts", getCohorts);
 router.get("/district/:districtId", getDistrict);

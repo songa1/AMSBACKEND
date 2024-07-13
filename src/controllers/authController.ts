@@ -38,6 +38,7 @@ const AuthController: AuthController = {
           residentSector: true,
           cohort: true,
           role: true,
+          track: true,
         },
       });
       if (!user) {
@@ -139,6 +140,7 @@ const AuthController: AuthController = {
         where: { email },
         include: {
           role: true,
+          track: true,
         },
       });
       if (user) {

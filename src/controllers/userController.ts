@@ -37,6 +37,7 @@ const UserController: UserController = {
           residentDistrict: true,
           residentSector: true,
           cohort: true,
+          track: true,
         },
       });
 
@@ -60,12 +61,14 @@ const UserController: UserController = {
             include: {
               district: true,
               sector: true,
+              workingSector: true,
             },
           },
           organizationFounded: {
             include: {
               district: true,
               sector: true,
+              workingSector: true,
             },
           },
           gender: true,
@@ -73,6 +76,7 @@ const UserController: UserController = {
           residentSector: true,
           cohort: true,
           role: true,
+          track: true,
         },
       });
       if (!user) {
@@ -199,7 +203,7 @@ const UserController: UserController = {
               phoneNumber: user.phoneNumber,
               whatsappNumber: user.whatsappNumber,
               genderName: user.genderName,
-              track: user.track,
+              trackId: user.trackId,
               createdAt: new Date(),
             },
           });

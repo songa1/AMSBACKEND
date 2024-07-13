@@ -24,6 +24,15 @@ model Cohort {
   User        User[]
 }
 
+model Country {
+  id           String         @id @unique @default(uuid())
+  name         String         @unique
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Organization Organization[]
+  User         User[]
+}
+
 model District {
   id           String         @id @unique @default(uuid())
   name         String         @unique
@@ -46,18 +55,22 @@ model Sector {
 }
 
 model Organization {
-  id              Int       @id @unique @default(autoincrement())
+  id              Int            @id @unique @default(autoincrement())
   name            String?
-  workingSector   String?
+  workingSectorId String?
+  workingSector   WorkingSector? @relation(fields: [workingSectorId], references: [id])
+  countryId       String?
+  country         Country?       @relation(fields: [countryId], references: [id])
   districtId      String?
-  district        District? @relation(fields: [districtId], references: [name])
+  district        District?      @relation(fields: [districtId], references: [name])
   sectorId        String?
-  sector          Sector?   @relation(fields: [sectorId], references: [id])
+  sector          Sector?        @relation(fields: [sectorId], references: [id])
   website         String?
-  foundedByUsers  User[]    @relation("FoundedOrganization")
-  employedByUsers User[]    @relation("EmployedOrganization")
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  socials         String?
+  foundedByUsers  User[]         @relation("FoundedOrganization")
+  employedByUsers User[]         @relation("EmployedOrganization")
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
 }
 
 model User {
@@ -67,6 +80,9 @@ model User {
   lastName               String
   email                  String          @unique
   phoneNumber            String
+  isRwandan              Boolean?
+  residentCountryId      String?
+  residentCountry        Country?        @relation(fields: [residentCountryId], references: [id])
   residentDistrictId     String?
   residentDistrict       District?       @relation(fields: [residentDistrictId], references: [id])
   residentSectorId       String?
@@ -79,7 +95,8 @@ model User {
   nearestLandmark        String?
   cohortId               Int?
   cohort                 Cohort?         @relation(references: [id], fields: [cohortId])
-  track                  String?
+  trackId                String?
+  track                  Track?          @relation(fields: [trackId], references: [id])
   organizationFoundedId  Int?
   organizationFounded    Organization?   @relation("FoundedOrganization", references: [id], fields: [organizationFoundedId])
   positionInFounded      String?
@@ -89,19 +106,24 @@ model User {
   password               String          @default("pass")
   refreshToken           String?
   token                  String?
+  socials                String?
   createdAt              DateTime        @default(now())
   updatedAt              DateTime        @updatedAt
   sentMessages           Message[]       @relation("sender")
   Notifications          Notifications[]
+  receivedMessages       Message[]       @relation("receiver")
 }
 
 model Message {
-  id        String   @id @unique @default(uuid())
-  message   String
-  sender    User?    @relation("sender", references: [id], fields: [senderId])
-  senderId  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String   @id @unique @default(uuid())
+  message    String
+  sender     User?    @relation("sender", references: [id], fields: [senderId])
+  senderId   String?
+  receiver   User?    @relation("receiver", references: [id], fields: [receiverId])
+  receiverId String?
+  public     Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model Notifications {
@@ -116,6 +138,22 @@ model Notifications {
 }
 
 model Role {
+  id        String   @id @unique @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User[]
+}
+
+model WorkingSector {
+  id           String         @id @unique @default(uuid())
+  name         String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Organization Organization[]
+}
+
+model Track {
   id        String   @id @unique @default(uuid())
   name      String
   createdAt DateTime @default(now())
