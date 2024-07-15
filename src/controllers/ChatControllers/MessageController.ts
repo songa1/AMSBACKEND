@@ -49,11 +49,10 @@ export const getPrivateMessages = async (req: any, res: any) => {
 
 export const getPrivateChats = async (req: any, res: any) => {
   try {
-    const id = req.params.id;
     const messages = await prisma.message.findMany({
       where: {
         public: false,
-        OR: [{ receiverId: id }, { senderId: id }],
+        OR: [{ senderId: req.params.id }, { receiverId: req.params.id }],
       },
       include: {
         sender: true,

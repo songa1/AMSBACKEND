@@ -11,6 +11,6 @@ const chatRouter = Router();
 chatRouter.post("/", sendMessage);
 chatRouter.get("/", getMessages);
 chatRouter.get("/:id/:oid", getPrivateMessages);
-chatRouter.get("/chats/:id", getPrivateChats);
+chatRouter.get("/:id", getPrivateChats);
 
 export default chatRouter;
