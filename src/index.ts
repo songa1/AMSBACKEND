@@ -1,6 +1,7 @@
 import express from "express";
 import route from "./Routers";
 import bodyParser from "body-parser";
+const fileUpload = require("express-fileupload");
 import cors from "cors";
 import cron from "node-cron";
 import { generateProfileUpdateNotifications } from "./controllers/notificationController";
@@ -9,6 +10,17 @@ const app = express();
 const PORT = process.env.PORT || 7000;
 
 app.use(cors());
+
+app.use(
+  fileUpload({
+    limits: {
+      fileSize: 10000000,
+    },
+    abortOnLimit: true,
+  })
+);
+
+app.use(express.static("public"));
 
 const corsOptions = {
   origin: "*",

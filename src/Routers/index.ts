@@ -5,6 +5,7 @@ import authRouter from "./authRouter";
 import chatRouter from "./ChatRouter";
 import notificationRouter from "./notificationRouter";
 import statsRouter from "./statsRouter";
+import uploadRouter from "./uploadRouter";
 
 const route = Router();
 
@@ -14,5 +15,6 @@ route.use("/auth", authRouter);
 route.use("/chat", chatRouter);
 route.use("/notification", notificationRouter);
 route.use("/stats", statsRouter);
+route.use("/upload", uploadRouter);
 
 export default route;
