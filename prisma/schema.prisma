@@ -107,12 +107,14 @@ model User {
   refreshToken           String?
   token                  String?
   socials                String?
+  profileImageId         String?
+  profileImage           Image?          @relation("profilePicture", references: [id], fields: [profileImageId])
   createdAt              DateTime        @default(now())
   updatedAt              DateTime        @updatedAt
   sentMessages           Message[]       @relation("sender")
   Notifications          Notifications[]
   receivedMessages       Message[]       @relation("receiver")
-  Image                  Image[]
+  imageCreator           Image[]         @relation("creator")
 }
 
 model Message {
@@ -163,11 +165,12 @@ model Track {
 }
 
 model Image {
-  id        String   @id @unique @default(uuid())
-  link      String
-  name      String
-  creatorId String
-  creator   User     @relation(references: [id], fields: [creatorId])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String   @id @unique @default(uuid())
+  link       String
+  name       String
+  creatorId  String
+  creator    User     @relation("creator", references: [id], fields: [creatorId])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  userImages User[]   @relation("profilePicture")
 }

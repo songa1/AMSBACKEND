@@ -39,6 +39,7 @@ const AuthController: AuthController = {
           cohort: true,
           role: true,
           track: true,
+          profileImage: true,
         },
       });
       if (!user) {
@@ -141,6 +142,7 @@ const AuthController: AuthController = {
         include: {
           role: true,
           track: true,
+          profileImage: true,
         },
       });
       if (user) {

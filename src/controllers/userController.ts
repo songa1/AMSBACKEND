@@ -38,6 +38,7 @@ const UserController: UserController = {
           residentSector: true,
           cohort: true,
           track: true,
+          profileImage: true,
         },
       });
 
@@ -77,6 +78,7 @@ const UserController: UserController = {
           cohort: true,
           role: true,
           track: true,
+          profileImage: true,
         },
       });
       if (!user) {
@@ -313,6 +315,7 @@ const UserController: UserController = {
           organizationEmployedId: organizationEmployedUpdate?.id || undefined,
           positionInEmployed: user.positionInEmployed,
           password: user.password,
+          profileImageId: user?.profileImageId || undefined,
           updatedAt: new Date(),
         },
       });
