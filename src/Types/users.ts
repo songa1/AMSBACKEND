@@ -23,6 +23,14 @@ export interface User {
   password: string | null;
   createdAt: Date;
   updatedAt: Date;
+  profileImage: ProfileImage | null;
+  profileImageId: string | null;
+}
+
+export interface ProfileImage {
+  id: string;
+  link: string;
+  name: string;
 }
 
 export interface Role {

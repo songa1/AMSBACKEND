@@ -46,6 +46,7 @@ export const generateToken = (user: User): string => {
     phoneNumber: user.phoneNumber,
     email: user.email,
     role: user?.role,
+    profilePicture: user?.profileImage,
   };
   let token = jwt.sign(payload, secret, {
     expiresIn: Math.floor(Date.now() / 1000) + 24 * 3600,

@@ -9,4 +9,17 @@ const organizations = [
   },
 ];
 
-export { organizations };
+const workingSectors = [
+  {
+    id: "education",
+    name: "Education",
+    createdAt: new Date(),
+  },
+  {
+    id: "ict",
+    name: "ICT",
+    createdAt: new Date(),
+  },
+];
+
+export { organizations, workingSectors };

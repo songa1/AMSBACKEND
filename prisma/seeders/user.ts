@@ -10,3 +10,21 @@ export const users = [
     roleId: "11",
   },
 ];
+
+export const tracks = [
+  {
+    id: "sdg1",
+    name: "No Poverty",
+    createdAt: new Date(),
+  },
+  {
+    id: "sdg2",
+    name: "Zero Hunger",
+    createdAt: new Date(),
+  },
+  {
+    id: "sdg3",
+    name: "Good Health and Wellbeing",
+    createdAt: new Date(),
+  },
+];
