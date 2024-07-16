@@ -2,8 +2,9 @@ import { PrismaClient } from "@prisma/client";
 import { genders } from "./genders";
 import { cohorts } from "./cohorts";
 import { districtsData, sectorData } from "./locations";
-import { users } from "./user";
+import { tracks, users } from "./user";
 import { roles } from "./role";
+import { workingSectors } from "./organization";
 const prisma = new PrismaClient();
 
 async function upsertData(data: any, prismaModel: any) {
@@ -26,6 +27,8 @@ async function runSeeders() {
     await upsertData(districtsData, prisma.district);
     await upsertData(sectorData, prisma.sector);
     await upsertData(users, prisma.user);
+    await upsertData(workingSectors, prisma.workingSector);
+    await upsertData(tracks, prisma.track);
 
     console.log("Data seeding completed successfully.");
   } catch (error) {

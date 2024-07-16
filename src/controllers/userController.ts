@@ -126,7 +126,7 @@ const UserController: UserController = {
           whatsappNumber: user.whatsappNumber,
           genderName: user.genderName,
           nearestLandmark: user.nearestLandmark,
-          cohortId: user.cohortId,
+          cohortId: user.cohortId || undefined,
           track: user.track,
           organizationFoundedId: organizationFoundedCreate.id,
           positionInFounded: user.positionInFounded,
