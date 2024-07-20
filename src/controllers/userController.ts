@@ -93,6 +93,12 @@ const UserController: UserController = {
   createUser: async (req, res) => {
     const { user, organizationFounded, organizationEmployed } = req.body;
 
+    if (!user?.email) {
+      return res
+        .status(409)
+        .json({ error: "You can't add a user without email address!" });
+    }
+
     try {
       const userExisting = await prisma.user.findFirst({
         where: { email: user?.email },
@@ -128,6 +134,7 @@ const UserController: UserController = {
           nearestLandmark: user.nearestLandmark,
           cohortId: user.cohortId || undefined,
           track: user.track,
+          profileImageId: user?.profileImageId,
           bio: user?.bio || undefined,
           organizationFoundedId: organizationFoundedCreate.id,
           positionInFounded: user.positionInFounded,
@@ -268,13 +275,19 @@ const UserController: UserController = {
           data: {
             name: organizationFounded?.name,
             workingSector: {
-              connect: { id: organizationFounded?.workingSector || "" },
+              connect: {
+                id: organizationFounded?.workingSector || "unspecified",
+              },
             },
             district: {
-              connect: { id: organizationFounded?.districtId || "" },
+              connect: {
+                id: organizationFounded?.districtId
+                  ? organizationFounded?.districtId
+                  : "unspecified",
+              },
             },
             sector: {
-              connect: { id: organizationFounded?.sectorId || "" },
+              connect: { id: organizationFounded?.sectorId || "unspecified" },
             },
             website: organizationFounded?.website,
           },
@@ -284,13 +297,15 @@ const UserController: UserController = {
           data: {
             name: organizationFounded?.name,
             workingSector: {
-              connect: { id: organizationFounded?.workingSector || "" },
+              connect: {
+                id: organizationFounded?.workingSector || "unspecified",
+              },
             },
             district: {
-              connect: { id: organizationFounded?.districtId || "" },
+              connect: { id: organizationFounded?.districtId || "unspecified" },
             },
             sector: {
-              connect: { id: organizationFounded?.sectorId || "" },
+              connect: { id: organizationFounded?.sectorId || "unspecified" },
             },
             website: organizationFounded?.website,
           },
@@ -303,16 +318,18 @@ const UserController: UserController = {
           data: {
             name: organizationEmployed?.name,
             workingSector: {
-              connect: { id: organizationEmployed?.workingSector || undefined },
+              connect: {
+                id: organizationEmployed?.workingSector || "unspecified",
+              },
             },
             district: {
               connect: {
-                id: organizationEmployed?.districtId || undefined,
+                id: organizationEmployed?.districtId || "unspecified",
               },
             },
             sector: {
               connect: {
-                id: organizationEmployed?.sectorId || undefined,
+                id: organizationEmployed?.sectorId || "unspecified",
               },
             },
             website: organizationEmployed?.website,
