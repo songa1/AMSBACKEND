@@ -16,6 +16,7 @@ export interface User {
   trackId: string | null;
   roleId: string | null;
   role: Role | null;
+  bio: string | null;
   organizationFoundedId: number | null;
   positionInFounded: string | null;
   organizationEmployedId: number | null;

@@ -80,6 +80,7 @@ model User {
   lastName               String
   email                  String          @unique
   phoneNumber            String
+  bio                    String?
   isRwandan              Boolean?
   residentCountryId      String?
   residentCountry        Country?        @relation(fields: [residentCountryId], references: [id])

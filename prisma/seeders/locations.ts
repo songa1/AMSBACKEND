@@ -28,33 +28,21 @@ for (const province of provinces) {
         districtName: district,
         createdAt: new Date(),
       });
-
-      // const cells = rwanda.Cells(province, district, sector) ?? [];
-
-      // for (const [m, cell] of cells.entries()) {
-      //   const cellId = `${sectorId}-${m + 1}`;
-      //   cellData.push({
-      //     id: cellId,
-      //     name: cell,
-      //     sectorId: sectorId,
-      //     createdAt: new Date(),
-      //   });
-
-      //   const villages =
-      //     rwanda.Villages(province, district, sector, cell) ?? [];
-
-      //   for (const [d, village] of villages.entries()) {
-      //     const villageId = `${districtId}-${cellId}-${d + 1}`;
-      //     villageData.push({
-      //       id: villageId,
-      //       name: village,
-      //       cellId: cellId,
-      //       createdAt: new Date(),
-      //     });
-      //   }
-      // }
     }
   }
 }
+
+districtsData.push({
+  id: "unspecified",
+  name: "Not Specified",
+  createdAt: new Date(),
+});
+
+sectorData.push({
+  id: "unspecified",
+  name: "Not Specified",
+  districtName: "Not Specified",
+  createdAt: new Date(),
+});
 
 export { districtsData, sectorData, cellData, villageData };

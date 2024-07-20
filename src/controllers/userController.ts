@@ -93,6 +93,12 @@ const UserController: UserController = {
   createUser: async (req, res) => {
     const { user, organizationFounded, organizationEmployed } = req.body;
 
+    if (!user?.email) {
+      return res
+        .status(409)
+        .json({ error: "You can't add a user without email address!" });
+    }
+
     try {
       const userExisting = await prisma.user.findFirst({
         where: { email: user?.email },
@@ -128,6 +134,8 @@ const UserController: UserController = {
           nearestLandmark: user.nearestLandmark,
           cohortId: user.cohortId || undefined,
           track: user.track,
+          profileImageId: user?.profileImageId,
+          bio: user?.bio || undefined,
           organizationFoundedId: organizationFoundedCreate.id,
           positionInFounded: user.positionInFounded,
           organizationEmployedId: organizationEmployedCreate.id,
@@ -264,15 +272,41 @@ const UserController: UserController = {
       if (founded) {
         organizationFoundedUpdate = await prisma.organization.update({
           where: { id: organizationFounded.id },
-          data: organizationFounded,
+          data: {
+            name: organizationFounded?.name,
+            workingSector: {
+              connect: {
+                id: organizationFounded?.workingSector || "unspecified",
+              },
+            },
+            district: {
+              connect: {
+                id: organizationFounded?.districtId
+                  ? organizationFounded?.districtId
+                  : "unspecified",
+              },
+            },
+            sector: {
+              connect: { id: organizationFounded?.sectorId || "unspecified" },
+            },
+            website: organizationFounded?.website,
+          },
         });
       } else {
         organizationFoundedUpdate = await prisma.organization.create({
           data: {
             name: organizationFounded?.name,
-            workingSector: organizationFounded?.workingSector,
-            districtId: organizationFounded?.districtId || undefined,
-            sectorId: organizationFounded?.sectorId || undefined,
+            workingSector: {
+              connect: {
+                id: organizationFounded?.workingSector || "unspecified",
+              },
+            },
+            district: {
+              connect: { id: organizationFounded?.districtId || "unspecified" },
+            },
+            sector: {
+              connect: { id: organizationFounded?.sectorId || "unspecified" },
+            },
             website: organizationFounded?.website,
           },
         });
@@ -281,15 +315,43 @@ const UserController: UserController = {
       if (employed) {
         organizationEmployedUpdate = await prisma.organization.update({
           where: { id: organizationEmployed.id },
-          data: organizationEmployed,
+          data: {
+            name: organizationEmployed?.name,
+            workingSector: {
+              connect: {
+                id: organizationEmployed?.workingSector || "unspecified",
+              },
+            },
+            district: {
+              connect: {
+                id: organizationEmployed?.districtId || "unspecified",
+              },
+            },
+            sector: {
+              connect: {
+                id: organizationEmployed?.sectorId || "unspecified",
+              },
+            },
+            website: organizationEmployed?.website,
+          },
         });
       } else {
         organizationEmployedUpdate = await prisma.organization.create({
           data: {
             name: organizationEmployed?.name,
-            workingSector: organizationEmployed?.workingSector,
-            districtId: organizationEmployed?.districtId || undefined,
-            sectorId: organizationEmployed?.sectorId || undefined,
+            workingSector: {
+              connect: { id: organizationEmployed?.workingSector || undefined },
+            },
+            district: {
+              connect: {
+                id: organizationEmployed?.districtId || undefined,
+              },
+            },
+            sector: {
+              connect: {
+                id: organizationEmployed?.sectorId || undefined,
+              },
+            },
             website: organizationEmployed?.website,
           },
         });
@@ -302,17 +364,30 @@ const UserController: UserController = {
           middleName: user.middleName,
           lastName: user.lastName,
           email: user.email,
-          residentDistrictId: user.residentDistrictId || undefined,
-          residentSectorId: user.residentSectorId || undefined,
+          residentDistrict: {
+            connect: { id: user.residentDistrictId || undefined },
+          },
+          residentSector: {
+            connect: { id: user.residentSectorId || undefined },
+          },
           phoneNumber: user.phoneNumber,
           whatsappNumber: user.whatsappNumber,
-          genderName: user.genderName || undefined,
+          gender: { connect: { name: user.genderName || undefined } },
           nearestLandmark: user.nearestLandmark,
-          cohortId: user.cohortId || undefined,
-          track: user.track,
-          organizationFoundedId: organizationFoundedUpdate?.id || undefined,
+          cohort: {
+            connect: {
+              id: user?.cohortId || undefined,
+            },
+          },
+          track: { connect: { id: user.track || undefined } },
+          bio: user?.bio || undefined,
+          organizationFounded: {
+            connect: { id: organizationFoundedUpdate?.id || undefined },
+          },
           positionInFounded: user.positionInFounded,
-          organizationEmployedId: organizationEmployedUpdate?.id || undefined,
+          organizationEmployed: {
+            connect: { id: organizationEmployedUpdate?.id || undefined },
+          },
           positionInEmployed: user.positionInEmployed,
           password: user.password,
           profileImageId: user?.profileImageId || undefined,

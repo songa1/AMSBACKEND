@@ -20,6 +20,11 @@ const workingSectors = [
     name: "ICT",
     createdAt: new Date(),
   },
+  {
+    id: "unspecified",
+    name: "Not Specified",
+    createdAt: new Date(),
+  },
 ];
 
 export { organizations, workingSectors };
