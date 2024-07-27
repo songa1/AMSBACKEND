@@ -4,7 +4,9 @@ import jwt from "jsonwebtoken";
 import { User } from "../Types/users";
 const prisma = new PrismaClient();
 
-const secret: string = "secret" || process.env.SECRET_KEY;
+const secret: string = process.env.SECRET_KEY
+  ? process.env.SECRET_KEY
+  : "secret";
 
 export const UserExistsWithId = async (userId: string): Promise<any> => {
   let user = await prisma.user.findUnique({
@@ -39,7 +41,7 @@ export const passwordCompare = (
   return answer;
 };
 
-export const generateToken = (user: User): string => {
+export const generateToken = (user: any): string => {
   const payload = {
     firstName: user.firstName,
     lastName: user.lastName,

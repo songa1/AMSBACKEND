@@ -8,6 +8,8 @@ export interface User {
   whatsappNumber: string;
   genderName: string | null;
   nearestLandmark: string | null;
+  residentCountryId: string | null;
+  residentCountry: Country | null;
   residentDistrictId: string | null;
   residentSectorId: string | null;
   cohortId: number | null;
@@ -32,6 +34,12 @@ export interface ProfileImage {
   id: string;
   link: string;
   name: string;
+}
+
+export interface Country {
+  id: string;
+  name: string;
+  createdAt: string;
 }
 
 export interface Role {

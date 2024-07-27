@@ -126,6 +126,7 @@ const UserController: UserController = {
           middleName: user.middleName,
           lastName: user.lastName,
           email: user.email,
+          residentCountryId: user?.residentCountryId,
           residentDistrictId: user.residentDistrictId,
           residentSectorId: user.residentSectorId,
           phoneNumber: user.phoneNumber,

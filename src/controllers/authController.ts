@@ -34,6 +34,7 @@ const AuthController: AuthController = {
             },
           },
           gender: true,
+          residentCountry: true,
           residentDistrict: true,
           residentSector: true,
           cohort: true,
