@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { getGenders } from "../controllers/DataControllers/GenderController";
 import {
+  getCountries,
   getDistrict,
   getDistricts,
   getSector,
@@ -16,6 +17,7 @@ const router = Router();
 router.get("/genders", getGenders);
 router.get("/tracks", getTracks);
 router.get("/working-sectors", getWorkingSector);
+router.get("/countries", getCountries);
 router.get("/districts", getDistricts);
 router.get("/cohorts", getCohorts);
 router.get("/district/:districtId", getDistrict);

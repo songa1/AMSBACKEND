@@ -126,20 +126,52 @@ const UserController: UserController = {
           middleName: user.middleName,
           lastName: user.lastName,
           email: user.email,
-          residentCountryId: user?.residentCountryId,
-          residentDistrictId: user.residentDistrictId,
-          residentSectorId: user.residentSectorId,
+          residentCountry: {
+            connect: {
+              id: user?.residentCountryId
+                ? user?.residentCountryId
+                : "unspecified",
+            },
+          },
+          residentDistrict: {
+            connect: {
+              id: user.residentDistrictId
+                ? user?.residentDistrictId
+                : "unspecified",
+            },
+          },
+          residentSector: {
+            connect: {
+              id: user.residentSectorId
+                ? user?.residentSectorId
+                : "unspecified",
+            },
+          },
           phoneNumber: user.phoneNumber,
           whatsappNumber: user.whatsappNumber,
-          genderName: user.genderName,
+          gender: {
+            connect: {
+              name: user.genderName ? user?.genderName : "Not Specified",
+            },
+          },
           nearestLandmark: user.nearestLandmark,
-          cohortId: user.cohortId || undefined,
-          track: user.track,
-          profileImageId: user?.profileImageId,
+          cohort: { connect: { id: user.cohortId ? user?.cohortId : 0 } },
+          track: {
+            connect: { id: user.trackId ? user?.trackId : "unspecified" },
+          },
+          profileImage: {
+            connect: {
+              id: user?.profileImageId ? user?.profileImageId : "default",
+            },
+          },
           bio: user?.bio || undefined,
-          organizationFoundedId: organizationFoundedCreate.id,
+          organizationFounded: {
+            connect: { id: organizationFoundedCreate.id },
+          },
           positionInFounded: user.positionInFounded,
-          organizationEmployedId: organizationEmployedCreate.id,
+          organizationEmployed: {
+            connect: { id: organizationEmployedCreate.id },
+          },
           positionInEmployed: user.positionInEmployed,
           password: user.password,
           refreshToken: refreshToken,

@@ -169,8 +169,8 @@ model Image {
   id         String   @id @unique @default(uuid())
   link       String
   name       String
-  creatorId  String
-  creator    User     @relation("creator", references: [id], fields: [creatorId])
+  creatorId  String?
+  creator    User?    @relation("creator", references: [id], fields: [creatorId])
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   userImages User[]   @relation("profilePicture")
