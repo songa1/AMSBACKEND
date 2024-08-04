@@ -172,7 +172,7 @@ const UserController: UserController = {
               id: user?.profileImageId ? user?.profileImageId : "default",
             },
           },
-          bio: user?.bio || undefined,
+          bio: user?.bio || "",
           organizationFounded: {
             connect: { id: organizationFoundedCreate.id },
           },
@@ -463,12 +463,10 @@ const UserController: UserController = {
       }
 
       if (user?.email !== userExists?.email) {
-        return res
-          .status(500)
-          .json({
-            message:
-              "Updating user's email is not allowed! Request admin to do it for you!",
-          });
+        return res.status(500).json({
+          message:
+            "Updating user's email is not allowed! Request admin to do it for you!",
+        });
       }
 
       const updatedUser = await prisma.user.update({
