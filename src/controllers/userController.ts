@@ -24,18 +24,23 @@ const UserController: UserController = {
             include: {
               district: true,
               sector: true,
+              country: true,
+              workingSector: true,
             },
           },
           organizationFounded: {
             include: {
               district: true,
               sector: true,
+              country: true,
+              workingSector: true,
             },
           },
           role: true,
           gender: true,
           residentDistrict: true,
           residentSector: true,
+          residentCountry: true,
           cohort: true,
           track: true,
           profileImage: true,
@@ -63,6 +68,7 @@ const UserController: UserController = {
               district: true,
               sector: true,
               workingSector: true,
+              country: true,
             },
           },
           organizationFounded: {
@@ -70,6 +76,7 @@ const UserController: UserController = {
               district: true,
               sector: true,
               workingSector: true,
+              country: true,
             },
           },
           gender: true,
@@ -79,6 +86,7 @@ const UserController: UserController = {
           role: true,
           track: true,
           profileImage: true,
+          residentCountry: true,
         },
       });
       if (!user) {
@@ -164,7 +172,7 @@ const UserController: UserController = {
               id: user?.profileImageId ? user?.profileImageId : "default",
             },
           },
-          bio: user?.bio || undefined,
+          bio: user?.bio || "",
           organizationFounded: {
             connect: { id: organizationFoundedCreate.id },
           },
@@ -304,12 +312,14 @@ const UserController: UserController = {
 
       if (founded) {
         organizationFoundedUpdate = await prisma.organization.update({
-          where: { id: organizationFounded.id },
+          where: { id: founded.id },
           data: {
             name: organizationFounded?.name,
             workingSector: {
               connect: {
-                id: organizationFounded?.workingSector || "unspecified",
+                id: organizationFounded?.workingSector
+                  ? organizationFounded?.workingSector
+                  : "unspecified",
               },
             },
             district: {
@@ -320,7 +330,18 @@ const UserController: UserController = {
               },
             },
             sector: {
-              connect: { id: organizationFounded?.sectorId || "unspecified" },
+              connect: {
+                id: organizationFounded?.sectorId
+                  ? organizationFounded?.sectorId
+                  : "unspecified",
+              },
+            },
+            country: {
+              connect: {
+                id: organizationFounded?.countryId
+                  ? organizationFounded?.countryId
+                  : "unspecified",
+              },
             },
             website: organizationFounded?.website,
           },
@@ -331,14 +352,31 @@ const UserController: UserController = {
             name: organizationFounded?.name,
             workingSector: {
               connect: {
-                id: organizationFounded?.workingSector || "unspecified",
+                id: organizationFounded?.workingSector
+                  ? organizationFounded?.workingSector
+                  : "unspecified",
               },
             },
             district: {
-              connect: { id: organizationFounded?.districtId || "unspecified" },
+              connect: {
+                id: organizationFounded?.districtId
+                  ? organizationFounded?.districtId
+                  : "unspecified",
+              },
             },
             sector: {
-              connect: { id: organizationFounded?.sectorId || "unspecified" },
+              connect: {
+                id: organizationFounded?.sectorId
+                  ? organizationFounded?.sectorId
+                  : "unspecified",
+              },
+            },
+            country: {
+              connect: {
+                id: organizationFounded?.countryId
+                  ? organizationFounded?.countryId
+                  : "unspecified",
+              },
             },
             website: organizationFounded?.website,
           },
@@ -347,22 +385,35 @@ const UserController: UserController = {
 
       if (employed) {
         organizationEmployedUpdate = await prisma.organization.update({
-          where: { id: organizationEmployed.id },
+          where: { id: employed.id },
           data: {
             name: organizationEmployed?.name,
             workingSector: {
               connect: {
-                id: organizationEmployed?.workingSector || "unspecified",
+                id: organizationEmployed?.workingSector
+                  ? organizationEmployed?.workingSector
+                  : "unspecified",
               },
             },
             district: {
               connect: {
-                id: organizationEmployed?.districtId || "unspecified",
+                id: organizationEmployed?.districtId
+                  ? organizationEmployed?.districtId
+                  : "unspecified",
               },
             },
             sector: {
               connect: {
-                id: organizationEmployed?.sectorId || "unspecified",
+                id: organizationEmployed?.sectorId
+                  ? organizationEmployed?.sectorId
+                  : "unspecified",
+              },
+            },
+            country: {
+              connect: {
+                id: organizationEmployed?.countryId
+                  ? organizationEmployed?.countryId
+                  : "unspecified",
               },
             },
             website: organizationEmployed?.website,
@@ -373,20 +424,48 @@ const UserController: UserController = {
           data: {
             name: organizationEmployed?.name,
             workingSector: {
-              connect: { id: organizationEmployed?.workingSector || undefined },
+              connect: {
+                id: organizationEmployed?.workingSector
+                  ? organizationEmployed?.workingSector
+                  : "unspecified",
+              },
             },
             district: {
               connect: {
-                id: organizationEmployed?.districtId || undefined,
+                id: organizationEmployed?.districtId
+                  ? organizationEmployed?.districtId
+                  : "unspecified",
+              },
+            },
+            country: {
+              connect: {
+                id: organizationEmployed?.countryId
+                  ? organizationEmployed?.countryId
+                  : "unspecified",
               },
             },
             sector: {
               connect: {
-                id: organizationEmployed?.sectorId || undefined,
+                id: organizationEmployed?.sectorId
+                  ? organizationEmployed?.sectorId
+                  : "unspecified",
               },
             },
             website: organizationEmployed?.website,
           },
+        });
+      }
+
+      const userExists = await prisma.user.findFirst({ where: { id: userId } });
+
+      if (!userExists) {
+        return res.status(404).json({ message: "User does not exist!" });
+      }
+
+      if (user?.email !== userExists?.email) {
+        return res.status(500).json({
+          message:
+            "Updating user's email is not allowed! Request admin to do it for you!",
         });
       }
 
@@ -398,32 +477,53 @@ const UserController: UserController = {
           lastName: user.lastName,
           email: user.email,
           residentDistrict: {
-            connect: { id: user.residentDistrictId || undefined },
+            connect: {
+              id: user.residentDistrictId
+                ? user.residentDistrictId
+                : "unspecified",
+            },
+          },
+          residentCountry: {
+            connect: {
+              id: user.residentCountryId
+                ? user.residentCountryId
+                : "unspecified",
+            },
           },
           residentSector: {
-            connect: { id: user.residentSectorId || undefined },
+            connect: {
+              id: user.residentSectorId ? user.residentSectorId : "unspecified",
+            },
           },
           phoneNumber: user.phoneNumber,
           whatsappNumber: user.whatsappNumber,
-          gender: { connect: { name: user.genderName || undefined } },
+          gender: {
+            connect: {
+              name: user.genderName ? user.genderName : "Not Specified",
+            },
+          },
           nearestLandmark: user.nearestLandmark,
           cohort: {
             connect: {
-              id: user?.cohortId || undefined,
+              id: user?.cohortId ? user?.cohortId : 0,
             },
           },
-          track: { connect: { id: user.track || undefined } },
-          bio: user?.bio || undefined,
+          track: { connect: { id: user.track ? user.track : "unspecified" } },
+          bio: user?.bio || "",
           organizationFounded: {
-            connect: { id: organizationFoundedUpdate?.id || undefined },
+            connect: { id: organizationFoundedUpdate?.id },
           },
           positionInFounded: user.positionInFounded,
           organizationEmployed: {
-            connect: { id: organizationEmployedUpdate?.id || undefined },
+            connect: { id: organizationEmployedUpdate?.id },
           },
           positionInEmployed: user.positionInEmployed,
           password: user.password,
-          profileImageId: user?.profileImageId || undefined,
+          profileImage: {
+            connect: {
+              id: user?.profileImageId ? user?.profileImageId : "default",
+            },
+          },
           updatedAt: new Date(),
         },
       });
