@@ -462,20 +462,13 @@ const UserController: UserController = {
         return res.status(404).json({ message: "User does not exist!" });
       }
 
-      if (user?.email !== userExists?.email) {
-        return res.status(500).json({
-          message:
-            "Updating user's email is not allowed! Request admin to do it for you!",
-        });
-      }
-
       const updatedUser = await prisma.user.update({
         where: { id: userId },
         data: {
           firstName: user.firstName,
           middleName: user.middleName,
           lastName: user.lastName,
-          email: user.email,
+          email: user?.email,
           residentDistrict: {
             connect: {
               id: user.residentDistrictId
