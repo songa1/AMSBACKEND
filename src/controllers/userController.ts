@@ -324,9 +324,9 @@ const UserController: UserController = {
             },
             district: {
               connect: {
-                id: organizationFounded?.districtId
+                name: organizationFounded?.districtId
                   ? organizationFounded?.districtId
-                  : "unspecified",
+                  : "Not Specified",
               },
             },
             sector: {
@@ -359,9 +359,9 @@ const UserController: UserController = {
             },
             district: {
               connect: {
-                id: organizationFounded?.districtId
+                name: organizationFounded?.districtId
                   ? organizationFounded?.districtId
-                  : "unspecified",
+                  : "Not Specified",
               },
             },
             sector: {
@@ -397,9 +397,9 @@ const UserController: UserController = {
             },
             district: {
               connect: {
-                id: organizationEmployed?.districtId
-                  ? organizationEmployed?.districtId
-                  : "unspecified",
+                name: organizationFounded?.districtId
+                  ? organizationFounded?.districtId
+                  : "Not Specified",
               },
             },
             sector: {
@@ -432,9 +432,9 @@ const UserController: UserController = {
             },
             district: {
               connect: {
-                id: organizationEmployed?.districtId
-                  ? organizationEmployed?.districtId
-                  : "unspecified",
+                name: organizationFounded?.districtId
+                  ? organizationFounded?.districtId
+                  : "Not Specified",
               },
             },
             country: {
@@ -557,7 +557,7 @@ const UserController: UserController = {
         return res.status(500).json({ message: "Updating user failed" });
       }
     } catch (error: any) {
-      console.error(error.message);
+      console.error(error);
       return res.status(500).json({ error: "Internal Server Error" });
     }
   },
