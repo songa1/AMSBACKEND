@@ -275,6 +275,8 @@ const UserController: UserController = {
         })
       );
 
+      // Comment
+
       const filteredUsers = createdUsers.filter((user) => user !== null);
 
       return res.status(201).json({
