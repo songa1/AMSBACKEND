@@ -29,30 +29,7 @@ export const uploadImage = async (req: any, res: any) => {
       api_secret: process.env.CLOUDINARY_SECRET,
     });
 
-    // const storage = multer.diskStorage({
-    //   destination: function (req, file, cb) {
-    //     cb(null, "uploads/");
-    //   },
-    //   filename: function (req, file, cb) {
-    //     cb(null, Date.now() + path.extname(file.originalname));
-    //   },
-    // });
-
     const result: any = await uploadToCloudinary(profileImage.data);
-
-    // const upload = multer({ storage: storage });
-
-    // upload.single("file");
-
-    // console.log(profileImage);
-
-    // const filePath = req.file.path;
-
-    // if (!profileImage) return res.status(404).json({ error: "File Not Found" });
-
-    // const result = await cloudinary.uploader.upload_stream(profileImage, {
-    //   folder: "AMS",
-    // });
 
     try {
       const image = await prisma.image.create({
