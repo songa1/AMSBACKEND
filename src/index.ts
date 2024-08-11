@@ -5,6 +5,7 @@ const fileUpload = require("express-fileupload");
 import cors from "cors";
 import cron from "node-cron";
 import { generateProfileUpdateNotifications } from "./controllers/notificationController";
+import path from "path";
 
 const app = express();
 const PORT = process.env.PORT || 7000;
@@ -20,7 +21,7 @@ app.use(
   })
 );
 
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "../public")));
 
 const corsOptions = {
   origin: "*",

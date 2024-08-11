@@ -1,60 +1,80 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
+import { v2 as cloudinary } from "cloudinary";
 import path from "path";
-import fs from "fs";
+import multer from "multer";
+import streamifier from "streamifier";
+
+function uploadToCloudinary(buffer: any) {
+  return new Promise((resolve, reject) => {
+    const upload_stream = cloudinary.uploader.upload_stream((error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(result);
+      }
+    });
+
+    streamifier.createReadStream(buffer).pipe(upload_stream);
+  });
+}
 
 export const uploadImage = async (req: any, res: any) => {
   try {
     const { profileImage } = req.files;
 
-    if (!profileImage) return res.status(404).json({ error: "File Not Found" });
-
-    const imagePath = path.join(
-      __dirname,
-      "../../../public/images/",
-      profileImage.name
-    );
-    const publicPath = path
-      .join("/images/", profileImage.name)
-      .replace(/\\/g, "/");
-
-    const dir = path.dirname(imagePath);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-
-    profileImage.mv(imagePath, async (err: any) => {
-      if (err) {
-        return res
-          .status(500)
-          .json({ error: "File Upload Failed", message: err.message });
-      }
-
-      if (!/^image/.test(profileImage.mimetype))
-        return res.status(400).json({ error: "Invalid Image" });
-
-      try {
-        const image = await prisma.image.create({
-          data: {
-            name: profileImage.name,
-            link: publicPath,
-            creatorId: req.body.userId,
-            createdAt: new Date(),
-          },
-        });
-
-        res.status(200).send({
-          image: image,
-          message: "File uploaded successfully!",
-          name: profileImage.name,
-        });
-      } catch (prismaError: any) {
-        console.error(prismaError);
-        return res
-          .status(500)
-          .json({ error: "Database Error", message: prismaError.message });
-      }
+    cloudinary.config({
+      cloud_name: process.env.CLOUDINARY_NAME,
+      api_key: process.env.CLOUDINARY_KEY,
+      api_secret: process.env.CLOUDINARY_SECRET,
     });
+
+    // const storage = multer.diskStorage({
+    //   destination: function (req, file, cb) {
+    //     cb(null, "uploads/");
+    //   },
+    //   filename: function (req, file, cb) {
+    //     cb(null, Date.now() + path.extname(file.originalname));
+    //   },
+    // });
+
+    const result: any = await uploadToCloudinary(profileImage.data);
+
+    // const upload = multer({ storage: storage });
+
+    // upload.single("file");
+
+    // console.log(profileImage);
+
+    // const filePath = req.file.path;
+
+    // if (!profileImage) return res.status(404).json({ error: "File Not Found" });
+
+    // const result = await cloudinary.uploader.upload_stream(profileImage, {
+    //   folder: "AMS",
+    // });
+
+    try {
+      const image = await prisma.image.create({
+        data: {
+          name: profileImage.name,
+          link: result?.secure_url,
+          creatorId: req.body.userId,
+          createdAt: new Date(),
+        },
+      });
+
+      res.status(200).send({
+        image: image,
+        message: "File uploaded successfully!",
+        name: profileImage.name,
+      });
+    } catch (prismaError: any) {
+      console.error(prismaError);
+      return res
+        .status(500)
+        .json({ error: "Database Error", message: prismaError.message });
+    }
   } catch (error: any) {
     console.log(error?.message);
     res
