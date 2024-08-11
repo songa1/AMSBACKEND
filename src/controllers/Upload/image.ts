@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 import path from "path";
+import fs from "fs";
 
 export const uploadImage = async (req: any, res: any) => {
   try {
@@ -16,6 +17,11 @@ export const uploadImage = async (req: any, res: any) => {
     const publicPath = path
       .join("/images/", profileImage.name)
       .replace(/\\/g, "/");
+
+    const dir = path.dirname(imagePath);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
 
     profileImage.mv(imagePath, async (err: any) => {
       if (err) {
