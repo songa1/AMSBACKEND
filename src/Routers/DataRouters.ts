@@ -8,7 +8,11 @@ import {
   getSectors,
   getSectorsByDistrict,
 } from "../controllers/DataControllers/LocationController";
-import { getCohorts } from "../controllers/DataControllers/CohortController";
+import {
+  addCohorts,
+  deleteCohorts,
+  getCohorts,
+} from "../controllers/DataControllers/CohortController";
 import { getTracks } from "../controllers/DataControllers/TrackController";
 import { getWorkingSector } from "../controllers/DataControllers/WorkingSector";
 
@@ -20,6 +24,8 @@ router.get("/working-sectors", getWorkingSector);
 router.get("/countries", getCountries);
 router.get("/districts", getDistricts);
 router.get("/cohorts", getCohorts);
+router.post("/cohort", addCohorts);
+router.delete("/cohort/:id", deleteCohorts);
 router.get("/district/:districtId", getDistrict);
 router.get("/district/sector/:districtName", getSectorsByDistrict);
 router.get("/sectors", getSectors);

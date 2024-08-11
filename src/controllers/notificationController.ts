@@ -1,12 +1,12 @@
 import { PrismaClient } from "@prisma/client";
-import { subMonths, subWeeks } from "date-fns";
+import { subMinutes, subMonths, subWeeks } from "date-fns";
 import { Request, Response } from "express";
 
 const prisma = new PrismaClient();
 
 export async function generateProfileUpdateNotifications() {
   const oneMonthAgo = subMonths(new Date(), 6);
-  const oneWeekAgo = subWeeks(new Date(), 1);
+  const oneWeekAgo = subMinutes(new Date(), 1);
 
   const users = await prisma.user.findMany({
     where: {
