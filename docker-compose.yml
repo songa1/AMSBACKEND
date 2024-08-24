@@ -1,0 +1,15 @@
+version: "3.9" #specifies docker compose version
+services:
+  api:
+    build: .
+    ports:
+      - ${PORT}:${PORT}
+    env_file:
+      - .env
+    networks:
+      - yali-network
+
+networks:
+  yali-network:
+    name: yali-network
+    external: true
