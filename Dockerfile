@@ -5,8 +5,8 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 RUN npm i --legacy-peer-deps
-COPY ./src/_prisma ./src/_prisma
-RUN npx prisma generate --schema ./src/_prisma/schema.prisma
+COPY ./prisma ./prisma
+RUN npx prisma generate
 COPY . .
 
 RUN npm run build
