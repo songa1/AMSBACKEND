@@ -12,4 +12,3 @@ services:
 networks:
   yali-network:
     name: yali-network
-    external: true
