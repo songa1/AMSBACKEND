@@ -19,18 +19,18 @@ export const tracks = [
     createdAt: new Date(),
   },
   {
-    id: "sdg1",
-    name: "No Poverty",
+    id: "pm",
+    name: "Public Management",
     createdAt: new Date(),
   },
   {
-    id: "sdg2",
-    name: "Zero Hunger",
+    id: "cl",
+    name: "Civic Leadership",
     createdAt: new Date(),
   },
   {
-    id: "sdg3",
-    name: "Good Health and Wellbeing",
+    id: "be",
+    name: "Business & Entrepreneurship",
     createdAt: new Date(),
   },
 ];
