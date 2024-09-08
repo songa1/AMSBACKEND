@@ -189,13 +189,19 @@ const UserController: UserController = {
 
       if (createdUser) {
         const email = await sendEmail({
-          subject: "Your profile created successfully!",
+          subject: "Your profile on YALI AMS created successfully!",
           name: createdUser.firstName,
-          message:
-            "Your profile has been created on AMS. Use this link to set the password: " +
-            process.env.FRONTEND_URL +
-            "/reset-password/" +
-            createdUser.refreshToken,
+          message: `<div><p style="font-size: 16px; line-height: 1.5; color: #333;">
+  Your profile has been successfully created on YALI Alumni Management System (AMS). Please use the link below to set your password:
+</p>
+<p style="font-size: 16px; line-height: 1.5;">
+  <a href="${process.env.FRONTEND_URL}/reset-password/${createdUser.refreshToken}" style="color: #0073e6; text-decoration: none;">
+    Set your password
+  </a>
+</p>
+<p style="font-size: 14px; color: #777;">
+  If you did not request this, please contact Admin immediately.
+</p></div>`,
           receiver: createdUser.email,
         });
 
@@ -539,7 +545,15 @@ const UserController: UserController = {
         const email = await sendEmail({
           subject: notification.title,
           name: updatedUser.firstName,
-          message: notification.message,
+          message: `<div><p style="font-size: 16px; line-height: 1.5; color: #333;">
+  Your account information has been successfully updated on the Alumni Management System (AMS).
+</p>
+<p style="font-size: 16px; line-height: 1.5;">
+  If you did not make these changes or believe there has been an error, please contact our support team immediately.
+</p>
+<p style="font-size: 14px; color: #777;">
+  Thank you for keeping your profile up to date.
+</p></div>`,
           receiver: updatedUser.email,
         });
 

@@ -66,6 +66,7 @@ const AuthController: AuthController = {
         return res.status(500).json({ status: 500, message: "Login failed" });
       }
     } catch (error) {
+      console.log(error);
       return res.status(500).json({ error: "Internal Server Error" });
     }
   },
@@ -158,11 +159,17 @@ const AuthController: AuthController = {
             receiver: user.email,
             subject: "Reset Password",
             name: user?.firstName,
-            message:
-              "Click on this link to reset your password, " +
-              process.env.FRONTEND_URL +
-              "/reset-password/" +
-              updatedUser.refreshToken,
+            message: `<div><p style="font-size: 16px; line-height: 1.5; color: #333;">
+              We received a request to reset your password. Please click on the link below to reset your password:
+            </p>
+            <p style="font-size: 16px; line-height: 1.5;">
+              <a href="${process.env.FRONTEND_URL}/reset-password/${updatedUser.refreshToken}" style="color: #0073e6; text-decoration: none;">
+                Reset Password
+              </a>
+            </p>
+            <p style="font-size: 14px; color: #777;">
+              If you did not request this password reset, please ignore this email.
+            </p></div>`,
           });
           if (email.status === 200) {
             return res.status(201).json({
@@ -213,8 +220,22 @@ const AuthController: AuthController = {
       });
       if (email.status === 200) {
         return res.status(201).json({
-          message: "Password changed successfully, you can log in now!",
-          ...email,
+          message: `
+  <div><p style="font-size: 16px; line-height: 1.5; color: #333;">
+  Your password has been successfully changed. If you did not make this change, please contact Admin immediately.
+</p>
+<p style="font-size: 16px; line-height: 1.5;">
+  You can now log in to your account using your new password by clicking the link below:
+</p>
+<p style="font-size: 16px; line-height: 1.5;">
+  <a href="${process.env.FRONTEND_URL}/login" style="color: #0073e6; text-decoration: none;">
+    Log in to your account
+  </a>
+</p>
+<p style="font-size: 14px; color: #777;">
+  If you have any questions or encounter any issues, feel free to reach out to us.
+</p></div>
+`,
         });
       } else {
         return res.status(500).json({
