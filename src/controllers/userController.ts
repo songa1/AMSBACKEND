@@ -183,6 +183,10 @@ const UserController: UserController = {
           positionInEmployed: user.positionInEmployed,
           password: user.password,
           refreshToken: refreshToken,
+          facebook: user?.facebook || "",
+          instagram: user?.instagram || "",
+          linkedin: user?.linkedin || "",
+          twitter: user?.twitter || "",
           createdAt: new Date(),
         },
       });
@@ -280,8 +284,6 @@ const UserController: UserController = {
           return createdUser;
         })
       );
-
-      // Comment
 
       const filteredUsers = createdUsers.filter((user) => user !== null);
 
@@ -520,6 +522,10 @@ const UserController: UserController = {
           },
           positionInEmployed: user.positionInEmployed,
           password: user.password,
+          facebook: user?.facebook || "",
+          instagram: user?.instagram || "",
+          linkedin: user?.linkedin || "",
+          twitter: user?.twitter || "",
           profileImage: {
             connect: {
               id: user?.profileImageId ? user?.profileImageId : "default",

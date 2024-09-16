@@ -19,6 +19,10 @@ export interface User {
   roleId: string | null;
   role: Role | null;
   bio: string | null;
+  linkedin: string;
+  instagram: string;
+  facebook: string;
+  twitter: string;
   organizationFoundedId: number | null;
   positionInFounded: string | null;
   organizationEmployedId: number | null;
