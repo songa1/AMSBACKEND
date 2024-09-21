@@ -241,7 +241,7 @@ const UserController: UserController = {
     try {
       console.log(users);
       const createdUsers = await Promise.all(
-        users.map(async (user: User) => {
+        users.forEach(async (user: User) => {
           const existingUser = await prisma.user.findUnique({
             where: { email: user.email },
           });
@@ -250,9 +250,7 @@ const UserController: UserController = {
             console.log(
               `User with email ${user.email} already exists. Skipping.`
             );
-            return res.status(409).send({
-              message: `User with email ${user.email} already exists.`,
-            });
+            return res.status(400).send({ message: "User already exists!" });
           }
 
           const createdUser = await prisma.user.create({
@@ -261,27 +259,82 @@ const UserController: UserController = {
               middleName: user.middleName,
               lastName: user.lastName,
               email: user.email,
+              residentCountry: {
+                connect: {
+                  id: user?.residentCountryId
+                    ? user?.residentCountryId
+                    : "unspecified",
+                },
+              },
+              residentDistrict: {
+                connect: {
+                  name: user.residentDistrictId
+                    ? user?.residentDistrictId
+                    : "unspecified",
+                },
+              },
+              residentSector: {
+                connect: {
+                  id: user.residentSectorId
+                    ? user?.residentSectorId
+                    : "unspecified",
+                },
+              },
               phoneNumber: user.phoneNumber,
               whatsappNumber: user.whatsappNumber,
-              genderName: user.genderName,
-              trackId: user.trackId,
+              gender: {
+                connect: {
+                  name: user.genderName ? user?.genderName : "Not Specified",
+                },
+              },
+              nearestLandmark: user.nearestLandmark,
+              cohort: { connect: { id: user.cohortId ? user?.cohortId : 0 } },
+              track: {
+                connect: { id: user.trackId ? user?.trackId : "unspecified" },
+              },
+              bio: user?.bio || "",
+              positionInFounded: user.positionInFounded,
+              positionInEmployed: user.positionInEmployed,
+              facebook: user?.facebook || "",
+              instagram: user?.instagram || "",
+              linkedin: user?.linkedin || "",
+              twitter: user?.twitter || "",
               createdAt: new Date(),
             },
           });
 
-          const notification = {
-            title: "ACCOUNT: Your new account has been created!",
-            message: `<p>Hi ${user?.firstName},<br><p>Welcome aboard! Your account has been created and now you can start engaging with others through chats, and update your  profile from time to time!</p><p>Here's what you can do:</p><ul><li>Participate in conversations,</li><li>Monitor and update your profile,</li></ul><p>Again, you are most welcome, if you have any question, don't hesitate to contact the admin!</p><div><a href='/dashboard/chat'>Join Conversation</a><a href='/dashboard/profile'>View Profile</a></div><p>We hope you keep having a great time.</p><p>Best Regards,<br>The Admin</p>`,
-            receiverId: createdUser?.id,
-            opened: false,
-            createdAt: new Date(),
-          };
+          if (createdUser) {
+            const email = await sendEmail({
+              subject: "Your profile on YALI AMS created successfully!",
+              name: createdUser.firstName,
+              message: `<div><p style="font-size: 16px; line-height: 1.5; color: #333;">
+      Your profile has been successfully created on YALI Alumni Management System (AMS). Please use the link below to set your password:
+    </p>
+    <p style="font-size: 16px; line-height: 1.5;">
+      <a href="${process.env.FRONTEND_URL}/reset-password/${createdUser.refreshToken}" style="color: #0073e6; text-decoration: none;">
+        Set your password
+      </a>
+    </p>
+    <p style="font-size: 14px; color: #777;">
+      If you did not request this, please contact Admin immediately.
+    </p></div>`,
+              receiver: createdUser.email,
+            });
 
-          await prisma.notifications.create({
-            data: notification,
-          });
+            const notification = {
+              title: "ACCOUNT: Your new account has been created!",
+              message: `<p>Hi ${user?.firstName},<br><p>Welcome aboard! Your account has been created and now you can start engaging with others through chats, and update your  profile from time to time!</p><p>Here's what you can do:</p><ul><li>Participate in conversations,</li><li>Monitor and update your profile,</li></ul><p>Again, you are most welcome, if you have any question, don't hesitate to contact the admin!</p><div><a href='/dashboard/chat'>Join Conversation</a><a href='/dashboard/profile'>View Profile</a></div><p>We hope you keep having a great time.</p><p>Best Regards,<br>The Admin</p>`,
+              receiverId: createdUser?.id,
+              opened: false,
+              createdAt: new Date(),
+            };
 
-          return createdUser;
+            await prisma.notifications.create({
+              data: notification,
+            });
+          } else {
+            return res.status(500).json({ message: "Create user failed" });
+          }
         })
       );
 

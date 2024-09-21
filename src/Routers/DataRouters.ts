@@ -7,6 +7,8 @@ import {
   getSector,
   getSectors,
   getSectorsByDistrict,
+  getStates,
+  getStatesByCountry,
 } from "../controllers/DataControllers/LocationController";
 import {
   addCohorts,
@@ -22,6 +24,8 @@ router.get("/genders", getGenders);
 router.get("/tracks", getTracks);
 router.get("/working-sectors", getWorkingSector);
 router.get("/countries", getCountries);
+router.get("/states", getStates);
+router.get("/states/:countryId", getStatesByCountry);
 router.get("/districts", getDistricts);
 router.get("/cohorts", getCohorts);
 router.post("/cohort", addCohorts);

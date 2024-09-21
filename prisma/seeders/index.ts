@@ -5,7 +5,7 @@ import { districtsData, sectorData } from "./locations";
 import { tracks, users } from "./user";
 import { roles } from "./role";
 import { workingSectors } from "./organization";
-import { countries } from "./countries";
+import { countries, states } from "./countries";
 import { images } from "./images";
 const prisma = new PrismaClient();
 
@@ -33,6 +33,7 @@ async function runSeeders() {
     await upsertData(tracks, prisma.track);
     await upsertData(countries, prisma.country);
     await upsertData(images, prisma.image);
+    await upsertData(states, prisma.state);
 
     console.log("Data seeding completed successfully.");
   } catch (error) {

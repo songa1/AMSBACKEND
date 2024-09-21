@@ -32,6 +32,8 @@ for (const province of provinces) {
   }
 }
 
+
+
 districtsData.push({
   id: "unspecified",
   name: "Not Specified",
