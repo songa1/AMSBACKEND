@@ -10,6 +10,7 @@
     "start": "node dist/src/index.js",
     "migrate": "prisma migrate",
     "migrate:dev": "prisma migrate dev --name init",
+    "migrate:deploy": "prisma migrate deploy",
     "seed": "node dist/prisma/seeders/index.js"
   },
   "repository": {
