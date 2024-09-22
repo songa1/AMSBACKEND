@@ -1,4 +1,4 @@
-export const cohorts = [
+const cohorts = [
   {
     id: 0,
     name: "Not Specified",
@@ -6,3 +6,14 @@ export const cohorts = [
     createdAt: new Date(),
   },
 ];
+
+for (let i = 1; i <= 55; i++) {
+  cohorts.push({
+    id: i,
+    name: String(i),
+    description: String(i),
+    createdAt: new Date(),
+  });
+}
+
+export { cohorts };
