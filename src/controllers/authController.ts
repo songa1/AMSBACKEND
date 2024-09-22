@@ -216,11 +216,7 @@ const AuthController: AuthController = {
         receiver: user.email,
         subject: "Password Reset Successful",
         name: user?.firstName,
-        message: "Your password has been changed successfully!",
-      });
-      if (email.status === 200) {
-        return res.status(201).json({
-          message: `
+        message: `
   <div><p style="font-size: 16px; line-height: 1.5; color: #333;">
   Your password has been successfully changed. If you did not make this change, please contact Admin immediately.
 </p>
@@ -236,6 +232,10 @@ const AuthController: AuthController = {
   If you have any questions or encounter any issues, feel free to reach out to us.
 </p></div>
 `,
+      });
+      if (email.status === 200) {
+        return res.status(201).json({
+          message: "Your password has been changed successfully!",
         });
       } else {
         return res.status(500).json({
