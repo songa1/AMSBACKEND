@@ -15,14 +15,26 @@ import {
   deleteCohorts,
   getCohorts,
 } from "../controllers/DataControllers/CohortController";
-import { getTracks } from "../controllers/DataControllers/TrackController";
-import { getWorkingSector } from "../controllers/DataControllers/WorkingSector";
+import {
+  addTrack,
+  deleteTracks,
+  getTracks,
+} from "../controllers/DataControllers/TrackController";
+import {
+  addWorkingSector,
+  deleteWorkingSector,
+  getWorkingSector,
+} from "../controllers/DataControllers/WorkingSector";
 
 const router = Router();
 
 router.get("/genders", getGenders);
 router.get("/tracks", getTracks);
+router.post("/tracks", addTrack);
+router.delete("/track/:id", deleteTracks);
 router.get("/working-sectors", getWorkingSector);
+router.post("/working-sectors", addWorkingSector);
+router.delete("/working-sector/:id", deleteWorkingSector);
 router.get("/countries", getCountries);
 router.get("/states", getStates);
 router.get("/states/:countryId", getStatesByCountry);
