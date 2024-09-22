@@ -224,7 +224,7 @@ const AuthController: AuthController = {
   You can now log in to your account using your new password by clicking the link below:
 </p>
 <p style="font-size: 16px; line-height: 1.5;">
-  <a href="${process.env.FRONTEND_URL}/login" style="color: #0073e6; text-decoration: none;">
+  <a href="${process.env.FRONTEND_URL}" style="color: #0073e6; text-decoration: none;">
     Log in to your account
   </a>
 </p>
@@ -233,6 +233,8 @@ const AuthController: AuthController = {
 </p></div>
 `,
       });
+
+      console.log(email);
       if (email.status === 200) {
         return res.status(201).json({
           message: "Your password has been changed successfully!",
