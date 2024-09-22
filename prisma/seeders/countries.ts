@@ -11,6 +11,12 @@ const countries = countryList.map((country) => {
   };
 });
 
+countries.push({
+  id: "unspecified",
+  name: "Not specified",
+  createdAt: new Date(),
+});
+
 const states = stateList.map((state) => {
   return {
     id: state.isoCode,
@@ -18,6 +24,13 @@ const states = stateList.map((state) => {
     countryCode: state.countryCode,
     createdAt: new Date(),
   };
+});
+
+states.push({
+  id: "unspecified",
+  name: "Not specified",
+  countryCode: "unspecified",
+  createdAt: new Date(),
 });
 
 export { countries, states };

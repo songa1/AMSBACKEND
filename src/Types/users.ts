@@ -23,6 +23,7 @@ export interface User {
   instagram: string;
   facebook: string;
   twitter: string;
+  state: State;
   organizationFoundedId: number | null;
   positionInFounded: string | null;
   organizationEmployedId: number | null;
@@ -43,6 +44,13 @@ export interface ProfileImage {
 export interface Country {
   id: string;
   name: string;
+  createdAt: string;
+}
+
+export interface State {
+  id: string;
+  name: string;
+  countryCode: string;
   createdAt: string;
 }
 

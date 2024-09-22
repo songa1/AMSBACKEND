@@ -180,6 +180,11 @@ const UserController: UserController = {
           organizationEmployed: {
             connect: { id: organizationEmployedCreate.id },
           },
+          state: {
+            connect: {
+              id: user?.state ? user?.state : "unspecified",
+            },
+          },
           positionInEmployed: user.positionInEmployed,
           password: user.password,
           refreshToken: refreshToken,
@@ -406,6 +411,13 @@ const UserController: UserController = {
                   : "unspecified",
               },
             },
+            state: {
+              connect: {
+                id: organizationFounded?.state
+                  ? organizationFounded?.state
+                  : "unspecified",
+              },
+            },
             website: organizationFounded?.website,
           },
         });
@@ -438,6 +450,13 @@ const UserController: UserController = {
               connect: {
                 id: organizationFounded?.countryId
                   ? organizationFounded?.countryId
+                  : "unspecified",
+              },
+            },
+            state: {
+              connect: {
+                id: organizationFounded?.state
+                  ? organizationFounded?.state
                   : "unspecified",
               },
             },
@@ -479,6 +498,13 @@ const UserController: UserController = {
                   : "unspecified",
               },
             },
+            state: {
+              connect: {
+                id: organizationFounded?.state
+                  ? organizationFounded?.state
+                  : "unspecified",
+              },
+            },
             website: organizationEmployed?.website,
           },
         });
@@ -504,6 +530,13 @@ const UserController: UserController = {
               connect: {
                 id: organizationEmployed?.countryId
                   ? organizationEmployed?.countryId
+                  : "unspecified",
+              },
+            },
+            state: {
+              connect: {
+                id: organizationFounded?.state
+                  ? organizationFounded?.state
                   : "unspecified",
               },
             },
@@ -544,6 +577,11 @@ const UserController: UserController = {
               id: user.residentCountryId
                 ? user.residentCountryId
                 : "unspecified",
+            },
+          },
+          state: {
+            connect: {
+              id: user.state ? user.state : "unspecified",
             },
           },
           residentSector: {

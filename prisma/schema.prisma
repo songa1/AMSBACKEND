@@ -35,12 +35,14 @@ model Country {
 }
 
 model State {
-  id          String   @id @unique @default(uuid())
-  name        String
-  countryCode String?
-  country     Country? @relation(fields: [countryCode], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String         @id @unique @default(uuid())
+  name         String
+  countryCode  String?
+  country      Country?       @relation(fields: [countryCode], references: [id])
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  User         User[]
+  Organization Organization[]
 }
 
 model District {
@@ -71,6 +73,8 @@ model Organization {
   workingSector   WorkingSector? @relation(fields: [workingSectorId], references: [id])
   countryId       String?
   country         Country?       @relation(fields: [countryId], references: [id])
+  stateId         String?
+  state           State?         @relation(fields: [stateId], references: [id])
   districtId      String?
   district        District?      @relation(fields: [districtId], references: [name])
   sectorId        String?
@@ -98,6 +102,8 @@ model User {
   isRwandan              Boolean?
   residentCountryId      String?
   residentCountry        Country?        @relation(fields: [residentCountryId], references: [id])
+  stateId                String?
+  state                  State?          @relation(fields: [stateId], references: [id])
   residentDistrictId     String?
   residentDistrict       District?       @relation(fields: [residentDistrictId], references: [id])
   residentSectorId       String?
