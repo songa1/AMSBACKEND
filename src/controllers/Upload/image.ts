@@ -2,7 +2,6 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 import { v2 as cloudinary } from "cloudinary";
 import path from "path";
-import multer from "multer";
 import streamifier from "streamifier";
 
 function uploadToCloudinary(buffer: any) {

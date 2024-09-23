@@ -3,6 +3,10 @@ import { PrismaClient } from "@prisma/client";
 import sendEmail from "../helpers/sendMail";
 import { User } from "../Types/users";
 import { generateToken } from "../helpers/auth";
+import fs from "fs";
+import csvParser from "csv-parser";
+import XLSX from "xlsx";
+import { randomUUID } from "crypto";
 
 const prisma = new PrismaClient();
 
@@ -691,6 +695,351 @@ const UserController: UserController = {
       return res.status(500).json({ error: "Internal Server Error" });
     }
   },
+};
+
+export const importUsers = async (req: Request, res: Response) => {
+  try {
+    const { file }: any = req.files;
+    const errors = [];
+    const processedUsers = [];
+
+    if (!file) {
+      return res.status(400).send({ message: "No file uploaded." });
+    }
+
+    if (
+      file.mimetype !==
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ) {
+      fs.unlinkSync(file.tempFilePath);
+      return res.status(400).send({ message: "Invalid file selected." });
+    }
+
+    const workbook = XLSX.readFile(file.tempFilePath);
+    const sheetName = workbook.SheetNames[0];
+    const data: any = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
+    if (data.length === 0) {
+      return res.status(400).send({ message: "The uploaded file is empty." });
+    }
+
+    for (const row of data) {
+      try {
+        if (row["Email Address"] === "") {
+          errors.push({
+            message: "This user has no email, skipping!",
+            row,
+          });
+          continue;
+        }
+
+        const existingUser = await prisma.user.findFirst({
+          where: { email: row["Email Address"] },
+        });
+
+        if (existingUser) {
+          errors.push({
+            message: "This user already exists, skipping!",
+            row,
+          });
+          continue;
+        }
+
+        const organizationEmployed = {
+          name: row["Organization Employed"] || "",
+          website:
+            row["Website of an Organization that Employs you (If available)"] ||
+            "",
+          country: row["Country of your Employment"] || "",
+          workingSector: row["Working Sector of your Employer"] || "",
+          createdAt: new Date(),
+        };
+        const organizationFounded = {
+          name: row["Organization Founded"] || "",
+          website:
+            row["Website of an Initiative you Founded (If available)"] || "",
+          country: row["Country of your Initiative"] || "",
+          workingSector: row["Working Sector of your your Initiative"] || "",
+          createdAt: new Date(),
+        };
+
+        const user = {
+          firstName: row["First name"] || "",
+          middleName: row["Middle Name"] || "",
+          lastName: row["Second name"] || "",
+          email: row["Email Address"] || "",
+          phoneNumber: row["Your personal Phone number"] || "",
+          whatsappNumber: row["Your WhatsApp number"] || "",
+          linkedin: row["LinkedIn Profile Link (https://linkedin.com/in/...)"],
+          instagram: row["Instagram Profile Link (https://instagram.com/...)"],
+          facebook: row["Facebook Profile Link (https://facebook.com/...)"],
+          twitter: row["x (Twitter) Profile Link (https://x.com/...)"],
+          genderName: row["Gender"] || "",
+          residentCountry: row["Country of Residence"],
+          residentDistrictId: row["Residence/State/District"],
+          state: row["State (If not in Rwanda)"],
+          residentDistrict: row["District of Residence (If in Rwanda)"],
+          residentSector: row["Sector of Residence (If in Rwanda)"],
+          nearestLandmark: row["Nearest Landmark"] || "",
+          cohort: row["Cohort"],
+          track: row["Track"],
+          organizationFounded: organizationFounded.name,
+          positionInFounded: row["Position with Organization Founded"],
+          organizationEmployed: organizationEmployed?.name,
+          positionInEmployed: row["Position in Organization Employed"],
+          roleId: "12",
+          createdAt: new Date(),
+        };
+
+        const refreshToken = await generateToken(user);
+
+        const [OFWS, OEWS, EC, FC, UC, cohort, track, sector, state] =
+          await Promise.all([
+            prisma.workingSector.findFirst({
+              where: { name: organizationFounded?.workingSector },
+            }),
+            prisma.workingSector.findFirst({
+              where: { name: organizationEmployed?.workingSector },
+            }),
+            prisma.country.findFirst({
+              where: { name: organizationEmployed?.country },
+            }),
+            prisma.country.findFirst({
+              where: { name: organizationFounded?.country },
+            }),
+            prisma.country.findFirst({
+              where: { name: user?.residentCountry },
+            }),
+            prisma.cohort.findFirst({
+              where: { name: String(user?.cohort) },
+            }),
+            prisma.track.findFirst({
+              where: { name: String(user?.track) },
+            }),
+            prisma.sector.findFirst({
+              where: {
+                districtName: user?.residentDistrict,
+                name: user?.residentSector,
+              },
+            }),
+            prisma.state.findFirst({
+              where: {
+                country: { name: user?.residentCountry },
+                name: user?.state,
+              },
+            }),
+          ]);
+
+        const [OF, OE] = await Promise.all([
+          prisma.organization.create({
+            data: {
+              name: organizationFounded?.name,
+              workingSector: {
+                connect: {
+                  name: OFWS ? OFWS?.name : "Not Specified",
+                },
+              },
+              district: {
+                connect: {
+                  name: "Not Specified",
+                },
+              },
+              sector: {
+                connect: {
+                  id: "unspecified",
+                },
+              },
+              country: {
+                connect: {
+                  id: FC?.id ? FC?.id : "unspecified",
+                },
+              },
+              website: organizationFounded?.website,
+            },
+          }),
+          prisma.organization.create({
+            data: {
+              name: organizationEmployed?.name,
+              workingSector: {
+                connect: {
+                  name: OEWS ? OEWS?.name : "Not Specified",
+                },
+              },
+              country: {
+                connect: {
+                  id: EC?.id ? EC?.id : "unspecified",
+                },
+              },
+              website: organizationEmployed?.website,
+            },
+          }),
+        ]);
+
+        const US = await prisma.user.create({
+          data: {
+            firstName: user.firstName,
+            middleName: user.middleName,
+            lastName: user.lastName,
+            email: user.email,
+            residentCountry: {
+              connect: {
+                name: UC ? UC?.name : "Not Specified",
+              },
+            },
+            residentDistrict: {
+              connect: {
+                name: user.residentDistrict
+                  ? user?.residentDistrict
+                  : "Not Specified",
+              },
+            },
+            residentSector: {
+              connect: {
+                id: sector?.id ? sector?.id : "unspecified",
+              },
+            },
+            phoneNumber: user.phoneNumber,
+            whatsappNumber: user.whatsappNumber,
+            gender: {
+              connect: {
+                name: user.genderName ? user?.genderName : "Not Specified",
+              },
+            },
+            nearestLandmark: user.nearestLandmark,
+            cohort: { connect: { id: cohort?.id ? cohort?.id : 0 } },
+            track: {
+              connect: { id: track?.id ? track?.id : "unspecified" },
+            },
+            organizationFounded: {
+              connect: { id: OF.id },
+            },
+            positionInFounded: user.positionInFounded,
+            organizationEmployed: {
+              connect: { id: OE.id },
+            },
+            state: {
+              connect: {
+                id: state?.id ? state?.id : "unspecified",
+              },
+            },
+            positionInEmployed: user.positionInEmployed,
+            refreshToken: refreshToken,
+            facebook: user?.facebook,
+            instagram: user?.instagram,
+            linkedin: user?.linkedin,
+            twitter: user?.twitter,
+            createdAt: new Date(),
+          },
+        });
+
+        processedUsers.push(US);
+
+        const email = await sendEmail({
+          subject: "Your profile on YALI AMS created successfully!",
+          name: US.firstName,
+          message: `<div><p style="font-size: 16px; line-height: 1.5; color: #333;">
+  Your profile has been successfully created on YALI Alumni Management System (AMS). Please use the link below to set your password:
+</p>
+<p style="font-size: 16px; line-height: 1.5;">
+  <a href="${process.env.FRONTEND_URL}/reset-password/${US.refreshToken}" style="color: #0073e6; text-decoration: none;">
+    Set your password
+  </a>
+</p>
+<p style="font-size: 14px; color: #777;">
+  If you did not request this, please contact Admin immediately.
+</p></div>`,
+          receiver: US.email,
+        });
+
+        await prisma.notifications.create({
+          data: {
+            title: "ACCOUNT: Your new account has been created!",
+            message: `<p>Hi ${user?.firstName},<br><p>Welcome aboard! Your account has been created and now you can start engaging with others through chats, and update your  profile from time to time!</p><p>Here's what you can do:</p><ul><li>Participate in conversations,</li><li>Monitor and update your profile,</li></ul><p>Again, you are most welcome, if you have any question, don't hesitate to contact the admin!</p><div><a href='/dashboard/chat'>Join Conversation</a><a href='/dashboard/profile'>View Profile</a></div><p>We hope you keep having a great time.</p><p>Best Regards,<br>The Admin</p>`,
+            receiverId: US?.id,
+            opened: false,
+            createdAt: new Date(),
+          },
+        });
+      } catch (err: any) {
+        errors.push({ message: err.message, row });
+      }
+    }
+
+    return res.status(200).send({
+      message: "Users uploaded and processed successfully!",
+      processedUsers,
+      errors,
+    });
+  } catch (error: any) {
+    return res
+      .status(500)
+      .send({ message: "An error occurred during processing.", error });
+  }
+};
+
+export const exportUsers = async (req: Request, res: Response) => {
+  try {
+    const users = await prisma.user.findMany({
+      include: {
+        organizationEmployed: true,
+        organizationFounded: true,
+        residentCountry: true,
+        residentDistrict: true,
+        residentSector: true,
+        state: true,
+        cohort: true,
+        track: true,
+      },
+    });
+
+    const formattedData = users.map((user) => ({
+      "First Name": user.firstName,
+      "Middle Name": user.middleName,
+      "Last Name": user.lastName,
+      "Email Address": user.email,
+      "Phone Number": user.phoneNumber,
+      "WhatsApp Number": user.whatsappNumber,
+      "LinkedIn Profile": user.linkedin,
+      "Instagram Profile": user.instagram,
+      "Facebook Profile": user.facebook,
+      "Twitter Profile": user.twitter,
+      Gender: user.genderName,
+      "Country of Residence": user.residentCountry?.name,
+      "District of Residence": user.residentDistrict?.name || "",
+      State: user.state?.name || "",
+      "Sector of Residence": user.residentSector?.name || "",
+      "Nearest Landmark": user.nearestLandmark || "",
+      Cohort: user.cohort?.name || "",
+      Track: user.track?.name || "",
+      "Organization Founded": user.organizationFounded?.name || "",
+      "Position in Organization Founded": user.positionInFounded || "",
+      "Organization Employed": user.organizationEmployed?.name || "",
+      "Position in Organization Employed": user.positionInEmployed || "",
+    }));
+
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Users" + Date.now());
+
+    const excelBuffer = XLSX.write(workbook, {
+      type: "buffer",
+      bookType: "xlsx",
+    });
+
+    res.setHeader(
+      "Content-Disposition",
+      'attachment; filename="users_data.xlsx"'
+    );
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.send(excelBuffer);
+  } catch (error: any) {
+    return res
+      .status(500)
+      .send({ message: "An error occurred while exporting users.", error });
+  }
 };
 
 export default UserController;

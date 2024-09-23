@@ -1,5 +1,8 @@
 import { Router } from "express";
-import UserController from "../controllers/userController";
+import UserController, {
+  exportUsers,
+  importUsers,
+} from "../controllers/userController";
 import { authMiddleware } from "../middleware/auth";
 import { ChangeUserRole } from "../controllers/DataControllers/RoleController";
 
@@ -9,6 +12,8 @@ const router = Router();
 router.get("/", UserController.getAllUsers);
 router.get("/:userId", UserController.getUserById);
 router.post("/", UserController.createUser);
+router.post("/import", importUsers);
+router.post("/export", exportUsers);
 router.post("/bulk", UserController.bulkAddUsers);
 router.put("/:userId", UserController.updateUser);
 router.delete("/:userId", UserController.deleteUser);

@@ -18,6 +18,8 @@ app.use(
       fileSize: 10000000,
     },
     abortOnLimit: true,
+    useTempFiles: true,
+    tempFileDir: "tmp/",
   })
 );
 

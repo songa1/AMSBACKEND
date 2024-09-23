@@ -17,7 +17,7 @@ model Gender {
 
 model Cohort {
   id          Int      @id @unique @default(autoincrement())
-  name        String
+  name        String   @unique
   description String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -26,7 +26,7 @@ model Cohort {
 
 model Country {
   id           String         @id @unique @default(uuid())
-  name         String
+  name         String         @unique
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   Organization Organization[]
@@ -171,7 +171,7 @@ model Role {
 
 model WorkingSector {
   id           String         @id @unique @default(uuid())
-  name         String
+  name         String         @unique
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   Organization Organization[]
@@ -179,7 +179,7 @@ model WorkingSector {
 
 model Track {
   id        String   @id @unique @default(uuid())
-  name      String
+  name      String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   User      User[]
