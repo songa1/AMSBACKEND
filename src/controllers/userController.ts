@@ -7,6 +7,7 @@ import fs from "fs";
 import csvParser from "csv-parser";
 import XLSX from "xlsx";
 import { randomUUID } from "crypto";
+import path from "path";
 
 const prisma = new PrismaClient();
 
@@ -1019,7 +1020,7 @@ export const exportUsers = async (req: Request, res: Response) => {
 
     const workbook = XLSX.utils.book_new();
     const worksheet = XLSX.utils.json_to_sheet(formattedData);
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Users" + Date.now());
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Users");
 
     const excelBuffer = XLSX.write(workbook, {
       type: "buffer",
@@ -1034,7 +1035,7 @@ export const exportUsers = async (req: Request, res: Response) => {
       "Content-Type",
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     );
-    res.send(excelBuffer);
+    res.send({ data: excelBuffer });
   } catch (error: any) {
     return res
       .status(500)
