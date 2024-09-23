@@ -701,6 +701,7 @@ const UserController: UserController = {
 export const importUsers = async (req: Request, res: Response) => {
   try {
     const { file }: any = req.files;
+    console.log(req.files);
     const errors = [];
     const processedUsers = [];
 
@@ -966,12 +967,13 @@ export const importUsers = async (req: Request, res: Response) => {
       }
     }
 
-    return res.status(200).send({
+    return res.status(201).send({
       message: "Users uploaded and processed successfully!",
       processedUsers,
       errors,
     });
   } catch (error: any) {
+    console.log(error);
     return res
       .status(500)
       .send({ message: "An error occurred during processing.", error });
