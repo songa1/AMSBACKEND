@@ -748,20 +748,28 @@ export const importUsers = async (req: Request, res: Response) => {
         }
 
         const organizationEmployed = {
-          name: row["Organization Employed"] || "",
+          name:
+            row["Organization Name (If employed by another organization)"] ||
+            "",
           website:
             row["Website of an Organization that Employs you (If available)"] ||
             "",
-          country: row["Country of your Employment"] || "",
+          country: row["Organization Address (Country)"] || "",
           workingSector: row["Working Sector of your Employer"] || "",
           createdAt: new Date(),
         };
         const organizationFounded = {
-          name: row["Organization Founded"] || "",
+          name:
+            row[
+              "The name of your Initiative (organization you Founded or co-founded)  if Available"
+            ] || "",
           website:
-            row["Website of an Initiative you Founded (If available)"] || "",
-          country: row["Country of your Initiative"] || "",
-          workingSector: row["Working Sector of your your Initiative"] || "",
+            row["Website or any online presence of your initiative"] || "",
+          country: row["Country of the initiative (District/Sector)"] || "",
+          workingSector:
+            row[
+              "Main Sector of intervention (Eg: Finance, Education, Agribusiness, Etc)"
+            ] || "",
           createdAt: new Date(),
         };
 
@@ -775,20 +783,25 @@ export const importUsers = async (req: Request, res: Response) => {
           linkedin: row["LinkedIn Profile Link (https://linkedin.com/in/...)"],
           instagram: row["Instagram Profile Link (https://instagram.com/...)"],
           facebook: row["Facebook Profile Link (https://facebook.com/...)"],
-          twitter: row["x (Twitter) Profile Link (https://x.com/...)"],
+          twitter: row["X (Twitter) Profile Link (https://x.com/...)"],
           genderName: row["Gender"] || "",
           residentCountry: row["Country of Residence"],
-          residentDistrictId: row["Residence/State/District"],
           state: row["State (If not in Rwanda)"],
           residentDistrict: row["District of Residence (If in Rwanda)"],
           residentSector: row["Sector of Residence (If in Rwanda)"],
-          nearestLandmark: row["Nearest Landmark"] || "",
+          nearestLandmark:
+            row[
+              "Nearest Landmark (School, Church, Mosque, Hotel, or any other common known mark)"
+            ] || "",
           cohort: row["Cohort"],
           track: row["Track"],
           organizationFounded: organizationFounded.name,
-          positionInFounded: row["Position with Organization Founded"],
+          positionInFounded:
+            row[
+              "Position with that Organizaton  (Eg: Founder & CEO, Co-Founder &CEO) or other Position"
+            ],
           organizationEmployed: organizationEmployed?.name,
-          positionInEmployed: row["Position in Organization Employed"],
+          positionInEmployed: row["Position in the organization employing you"],
           roleId: "12",
           createdAt: new Date(),
         };
@@ -922,6 +935,11 @@ export const importUsers = async (req: Request, res: Response) => {
             state: {
               connect: {
                 id: state?.id ? state?.id : "unspecified",
+              },
+            },
+            role: {
+              connect: {
+                id: user?.roleId ? user?.roleId : "12",
               },
             },
             positionInEmployed: user.positionInEmployed,
