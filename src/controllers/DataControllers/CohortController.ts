@@ -16,15 +16,26 @@ export const getCohorts = async (req: Request, res: Response) => {
 
 export const addCohorts = async (req: Request, res: Response) => {
   try {
+    const existingCohort = await prisma.cohort.findFirst({
+      where: { name: req.body.name },
+    });
+
+    console.log(req.body);
+
+    if (existingCohort) {
+      return res.status(400).send({ message: "Cohort already exists." });
+    }
+
     const cohort = await prisma.cohort.create({
       data: {
         name: req.body.name,
         description: req.body.description,
       },
     });
+
     res.status(201).send({ message: "Cohort", data: cohort });
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    console.log(error?.message);
     return res.status(500).json({ error: "Failed to add cohort" });
   }
 };
