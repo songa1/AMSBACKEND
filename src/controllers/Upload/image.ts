@@ -1,26 +1,36 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 import { v2 as cloudinary } from "cloudinary";
-import path from "path";
+import fs from "fs";
 import streamifier from "streamifier";
 
-function uploadToCloudinary(buffer: any) {
-  return new Promise((resolve, reject) => {
-    const upload_stream = cloudinary.uploader.upload_stream((error, result) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(result);
-      }
-    });
-
-    streamifier.createReadStream(buffer).pipe(upload_stream);
+const uploadToCloudinary = (filePath: string) => {
+  return cloudinary.uploader.upload(filePath, {
+    resource_type: "image",
   });
-}
+};
+
+// function uploadToCloudinary(buffer: any) {
+//   return new Promise((resolve, reject) => {
+//     const upload_stream = cloudinary.uploader.upload_stream((error, result) => {
+//       if (error) {
+//         reject(error);
+//       } else {
+//         resolve(result);
+//       }
+//     });
+
+//     streamifier.createReadStream(buffer).pipe(upload_stream);
+//   });
+// }
 
 export const uploadImage = async (req: any, res: any) => {
   try {
     const { profileImage } = req.files;
+
+    if (!profileImage) {
+      return res.status(400).send({ message: "No file uploaded." });
+    }
 
     cloudinary.config({
       cloud_name: process.env.CLOUDINARY_NAME,
@@ -28,7 +38,7 @@ export const uploadImage = async (req: any, res: any) => {
       api_secret: process.env.CLOUDINARY_SECRET,
     });
 
-    const result: any = await uploadToCloudinary(profileImage.data);
+    const result: any = await uploadToCloudinary(profileImage.tempFilePath);
 
     try {
       const image = await prisma.image.create({
@@ -39,6 +49,8 @@ export const uploadImage = async (req: any, res: any) => {
           createdAt: new Date(),
         },
       });
+
+      fs.unlinkSync(profileImage.tempFilePath);
 
       res.status(200).send({
         image: image,
