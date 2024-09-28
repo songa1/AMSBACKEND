@@ -1036,7 +1036,7 @@ export const exportUsers = async (req: Request, res: Response) => {
       "Position in Organization Founded": user.positionInFounded || "",
       "Organization Employed": user.organizationEmployed?.name || "",
       "Position in Organization Employed": user.positionInEmployed || "",
-      "Last Updated At": user?.updatedAt || "",
+      "Last Updated Date": user?.updatedAt || "",
     }));
 
     const workbook = XLSX.utils.book_new();
