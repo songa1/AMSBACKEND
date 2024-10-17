@@ -3,7 +3,6 @@ import UserController, {
   exportUsers,
   importUsers,
 } from "../controllers/userController";
-import { authMiddleware } from "../middleware/auth";
 import { ChangeUserRole } from "../controllers/DataControllers/RoleController";
 
 const router = Router();
@@ -11,7 +10,7 @@ const router = Router();
 // Define routes
 router.get("/", UserController.getAllUsers);
 router.get("/:userId", UserController.getUserById);
-router.post("/", UserController.createUser);
+router.post("/", protect UserController.createUser);
 router.post("/import", importUsers);
 router.post("/export", exportUsers);
 router.post("/bulk", UserController.bulkAddUsers);
