@@ -10,7 +10,7 @@ const router = Router();
 // Define routes
 router.get("/", UserController.getAllUsers);
 router.get("/:userId", UserController.getUserById);
-router.post("/", protect UserController.createUser);
+router.post("/", UserController.createUser);
 router.post("/import", importUsers);
 router.post("/export", exportUsers);
 router.post("/bulk", UserController.bulkAddUsers);
