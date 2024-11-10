@@ -31,7 +31,7 @@
     "cloudinary": "^2.4.0",
     "cors": "^2.8.5",
     "countries-list": "^3.1.0",
-    "country-state-city": "^3.2.1",
+    "countries-states-cities": "^1.0.6",
     "csv-parser": "^3.0.0",
     "date-fns": "^3.6.0",
     "express": "^4.19.2",

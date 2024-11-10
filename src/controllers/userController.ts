@@ -839,7 +839,7 @@ export const importUsers = async (req: Request, res: Response) => {
             }),
             prisma.state.findFirst({
               where: {
-                country: { name: user?.residentCountry },
+                countryCode: user?.residentCountry?.id,
                 name: user?.state,
               },
             }),

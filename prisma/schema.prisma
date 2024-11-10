@@ -27,18 +27,17 @@ model Cohort {
 model Country {
   id           String         @id @unique @default(uuid())
   name         String         @unique
+  cId          Int?
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   Organization Organization[]
   User         User[]
-  State        State[]
 }
 
 model State {
   id           String         @id @unique @default(uuid())
   name         String
   countryCode  String?
-  country      Country?       @relation(fields: [countryCode], references: [id])
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   User         User[]
