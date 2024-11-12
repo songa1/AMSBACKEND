@@ -7,6 +7,7 @@ import { roles } from "./role";
 import { workingSectors } from "./organization";
 import { countries, states } from "./countries";
 import { images } from "./images";
+import { notifications } from "./notification";
 const prisma = new PrismaClient();
 
 async function upsertData(data: any, prismaModel: any) {
@@ -34,6 +35,7 @@ async function runSeeders() {
     await upsertData(countries, prisma.country);
     await upsertData(images, prisma.image);
     await upsertData(states, prisma.state);
+    await upsertData(notifications, prisma.notificationSetup);
 
     console.log("Data seeding completed successfully.");
   } catch (error) {

@@ -87,11 +87,11 @@ model Organization {
 }
 
 model User {
-  id                     String          @id @unique @default(uuid())
+  id                     String              @id @unique @default(uuid())
   firstName              String
   middleName             String
   lastName               String
-  email                  String          @unique
+  email                  String              @unique
   phoneNumber            String
   bio                    String?
   linkedin               String?
@@ -100,41 +100,42 @@ model User {
   twitter                String?
   isRwandan              Boolean?
   residentCountryId      String?
-  residentCountry        Country?        @relation(fields: [residentCountryId], references: [id])
+  residentCountry        Country?            @relation(fields: [residentCountryId], references: [id])
   stateId                String?
-  state                  State?          @relation(fields: [stateId], references: [id])
+  state                  State?              @relation(fields: [stateId], references: [id])
   residentDistrictId     String?
-  residentDistrict       District?       @relation(fields: [residentDistrictId], references: [id])
+  residentDistrict       District?           @relation(fields: [residentDistrictId], references: [id])
   residentSectorId       String?
-  residentSector         Sector?         @relation(fields: [residentSectorId], references: [id])
+  residentSector         Sector?             @relation(fields: [residentSectorId], references: [id])
   whatsappNumber         String
   genderName             String?
-  gender                 Gender?         @relation(references: [name], fields: [genderName])
-  roleId                 String?         @default("12")
-  role                   Role?           @relation(references: [id], fields: [roleId])
+  gender                 Gender?             @relation(references: [name], fields: [genderName])
+  roleId                 String?             @default("12")
+  role                   Role?               @relation(references: [id], fields: [roleId])
   nearestLandmark        String?
   cohortId               Int?
-  cohort                 Cohort?         @relation(references: [id], fields: [cohortId])
+  cohort                 Cohort?             @relation(references: [id], fields: [cohortId])
   trackId                String?
-  track                  Track?          @relation(fields: [trackId], references: [id])
+  track                  Track?              @relation(fields: [trackId], references: [id])
   organizationFoundedId  Int?
-  organizationFounded    Organization?   @relation("FoundedOrganization", references: [id], fields: [organizationFoundedId])
+  organizationFounded    Organization?       @relation("FoundedOrganization", references: [id], fields: [organizationFoundedId])
   positionInFounded      String?
   organizationEmployedId Int?
-  organizationEmployed   Organization?   @relation("EmployedOrganization", references: [id], fields: [organizationEmployedId])
+  organizationEmployed   Organization?       @relation("EmployedOrganization", references: [id], fields: [organizationEmployedId])
   positionInEmployed     String?
-  password               String          @default("pass")
+  password               String              @default("pass")
   refreshToken           String?
   token                  String?
   socials                String?
   profileImageId         String?
-  profileImage           Image?          @relation("profilePicture", references: [id], fields: [profileImageId])
-  createdAt              DateTime        @default(now())
-  updatedAt              DateTime        @updatedAt
-  sentMessages           Message[]       @relation("sender")
+  profileImage           Image?              @relation("profilePicture", references: [id], fields: [profileImageId])
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime            @updatedAt
+  sentMessages           Message[]           @relation("sender")
   Notifications          Notifications[]
-  receivedMessages       Message[]       @relation("receiver")
-  imageCreator           Image[]         @relation("creator")
+  receivedMessages       Message[]           @relation("receiver")
+  imageCreator           Image[]             @relation("creator")
+  NotificationSetup      NotificationSetup[]
 }
 
 model Message {
@@ -158,6 +159,17 @@ model Notifications {
   opened     Boolean
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+model NotificationSetup {
+  id        String   @id @unique @default(uuid())
+  message   String
+  link      String
+  usage     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+  User      User?    @relation(fields: [updatedBy], references: [id])
 }
 
 model Role {
