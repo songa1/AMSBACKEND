@@ -133,3 +133,28 @@ export const updateNotificationDetails = async (
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+export const getAllNotificationSetups = async (req: Request, res: Response) => {
+  try {
+    const setups = await prisma.notificationSetup.findMany();
+
+    res.status(200).send({ message: "Notification Setups", data: setups });
+  } catch (error: any) {
+    console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const getOneNotificationSetups = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.body;
+    const setup = await prisma.notificationSetup.findFirst({
+      where: { id: id },
+    });
+
+    res.status(200).send({ message: "Notification Setup", data: setup });
+  } catch (error: any) {
+    console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
