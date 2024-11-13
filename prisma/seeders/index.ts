@@ -1,25 +1,36 @@
 import { PrismaClient } from "@prisma/client";
 import { genders } from "./genders";
 import { cohorts } from "./cohorts";
+import { roles } from "./role";
 import { districtsData, sectorData } from "./locations";
 import { tracks, users } from "./user";
-import { roles } from "./role";
 import { workingSectors } from "./organization";
 import { countries, states } from "./countries";
 import { images } from "./images";
 import { notifications } from "./notification";
+
 const prisma = new PrismaClient();
 
-async function upsertData(data: any, prismaModel: any) {
-  return await prisma.$transaction(
-    data.map((item: any) =>
-      prismaModel.upsert({
-        where: { id: item.id },
-        update: item,
-        create: item,
-      })
-    )
-  );
+const BATCH_SIZE = 100; // Adjust batch size as needed
+
+async function upsertData(data: any[], prismaModel: any) {
+  for (let i = 0; i < data.length; i += BATCH_SIZE) {
+    const batch = data.slice(i, i + BATCH_SIZE);
+    try {
+      await prisma.$transaction(
+        batch.map((item) =>
+          prismaModel.upsert({
+            where: { id: item.id },
+            update: item,
+            create: item,
+          })
+        )
+      );
+    } catch (error) {
+      console.error(`Error seeding batch starting at index ${i}:`, error);
+      throw error; // rethrow to stop seeding on failure
+    }
+  }
 }
 
 async function runSeeders() {
@@ -40,6 +51,8 @@ async function runSeeders() {
     console.log("Data seeding completed successfully.");
   } catch (error) {
     console.error("Data seeding failed:", error);
+  } finally {
+    await prisma.$disconnect();
   }
 }
 
