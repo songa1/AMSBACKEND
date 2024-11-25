@@ -10,8 +10,10 @@
     "start": "node dist/src/index.js",
     "migrate": "prisma migrate",
     "migrate:dev": "prisma migrate dev --name init",
+    "migrate:noinit": "prisma migrate dev",
     "migrate:pull": "prisma db pull",
     "migrate:sync": "prisma migrate dev --create-only --name sync-changes",
+    "migrate:specific": "prisma migrate resolve --applied 20240924061915_init",
     "migrate:deploy": "prisma migrate deploy",
     "seed": "node dist/prisma/seeders/index.js"
   },
