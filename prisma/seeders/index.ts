@@ -11,7 +11,7 @@ import { notifications } from "./notification";
 
 const prisma = new PrismaClient();
 
-const BATCH_SIZE = 100; // Adjust batch size as needed
+const BATCH_SIZE = 100;
 
 async function upsertData(data: any[], prismaModel: any) {
   for (let i = 0; i < data.length; i += BATCH_SIZE) {
