@@ -11,6 +11,7 @@
     "migrate": "prisma migrate",
     "migrate:dev": "prisma migrate dev --name init",
     "migrate:noinit": "prisma migrate dev",
+    "migrate:status": "prisma migrate status",
     "migrate:pull": "prisma db pull",
     "migrate:sync": "prisma migrate dev --create-only --name sync-changes",
     "migrate:specific": "prisma migrate resolve --applied 20240924061915_init",
