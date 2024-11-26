@@ -163,7 +163,7 @@ model Notifications {
 
 model NotificationSetup {
   id        String   @id @unique @default(uuid())
-  message   String
+  message   String   @db.VarChar(1000)
   link      String
   usage     String   @unique
   createdAt DateTime @default(now())
