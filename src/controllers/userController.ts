@@ -173,7 +173,7 @@ const UserController: UserController = {
             },
           },
           nearestLandmark: user.nearestLandmark,
-          cohort: { connect: { id: user.cohortId ? user?.cohortId : 0 } },
+          cohort: { connect: { id: user.cohortId ? user?.cohortId : 1 } },
           track: {
             connect: { id: user.trackId ? user?.trackId : "unspecified" },
           },
@@ -306,7 +306,7 @@ const UserController: UserController = {
                 },
               },
               nearestLandmark: user.nearestLandmark,
-              cohort: { connect: { id: user.cohortId ? user?.cohortId : 0 } },
+              cohort: { connect: { id: user.cohortId ? user?.cohortId : 1 } },
               track: {
                 connect: { id: user.trackId ? user?.trackId : "unspecified" },
               },
@@ -616,7 +616,7 @@ const UserController: UserController = {
           nearestLandmark: user.nearestLandmark,
           cohort: {
             connect: {
-              id: user?.cohortId ? user?.cohortId : 0,
+              id: user?.cohortId ? user?.cohortId : 1,
             },
           },
           track: { connect: { id: user.track ? user.track : "unspecified" } },
@@ -931,7 +931,7 @@ export const importUsers = async (req: Request, res: Response) => {
               },
             },
             nearestLandmark: user.nearestLandmark,
-            cohort: { connect: { id: cohort?.id ? cohort?.id : 0 } },
+            cohort: { connect: { id: cohort?.id ? cohort?.id : 1 } },
             track: {
               connect: { id: track?.id ? track?.id : "unspecified" },
             },
