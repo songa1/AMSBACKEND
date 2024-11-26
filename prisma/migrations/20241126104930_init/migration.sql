@@ -118,8 +118,8 @@ CREATE TABLE `User` (
     `organizationEmployedId` INTEGER NULL,
     `positionInEmployed` VARCHAR(191) NULL,
     `password` VARCHAR(191) NOT NULL DEFAULT 'pass',
-    `refreshToken` VARCHAR(191) NULL,
-    `token` VARCHAR(191) NULL,
+    `refreshToken` VARCHAR(1024) NULL,
+    `token` VARCHAR(1024) NULL,
     `socials` VARCHAR(191) NULL,
     `profileImageId` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -161,7 +161,7 @@ CREATE TABLE `Notifications` (
 -- CreateTable
 CREATE TABLE `NotificationSetup` (
     `id` VARCHAR(191) NOT NULL,
-    `message` VARCHAR(191) NOT NULL,
+    `message` VARCHAR(1000) NOT NULL,
     `link` VARCHAR(191) NOT NULL,
     `usage` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
