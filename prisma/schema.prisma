@@ -124,8 +124,8 @@ model User {
   organizationEmployed   Organization?       @relation("EmployedOrganization", references: [id], fields: [organizationEmployedId])
   positionInEmployed     String?
   password               String              @default("pass")
-  refreshToken           String?
-  token                  String?
+  refreshToken           String?             @db.VarChar(1024)
+  token                  String?             @db.VarChar(1024)
   socials                String?
   profileImageId         String?
   profileImage           Image?              @relation("profilePicture", references: [id], fields: [profileImageId])
