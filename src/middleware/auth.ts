@@ -4,20 +4,27 @@ import { Request, Response } from "express";
 const prisma = new PrismaClient();
 const jwt = require("jsonwebtoken");
 
-exports.protect = async (req: Request, res: Response, next: any) => {
+export const protect = async (req: Request, res: Response, next: any) => {
   let token;
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
   ) {
+    //console.log(process.env.JWT_SECRET)
     try {
       token = req.headers.authorization.split(" ")[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      const user = await prisma.user.findUnique(decoded.id);
+      //console.log(decoded)
+      const user = await prisma.user.findUnique({
+        where: {
+          id: decoded.id,
+        },
+      });
       if (user) return next();
+
       else
-        return res
-          .status(301)
+       return res
+         .status(301)
           .json({ message: "You are not authorized! Please login" });
     } catch (error) {
       console.log(error);
@@ -29,8 +36,12 @@ exports.protect = async (req: Request, res: Response, next: any) => {
   }
 };
 
-exports.isAdmin = (req: any, res: Response, next: any) => {
-  if (req.user.roleId !== "11") {
+export const isAdmin = (req: any, res: Response, next: any) => {
+  let token;
+  token = req.headers.authorization.split(" ")[1];
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  //console.log(decoded.role.id)
+  if (decoded.role.id !== "11") {
     return res
       .status(403)
       .json({ message: "You are not authorized to access this page!" });

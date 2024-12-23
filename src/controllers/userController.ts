@@ -106,7 +106,7 @@ const UserController: UserController = {
 
   createUser: async (req, res) => {
     const { user, organizationFounded, organizationEmployed } = req.body;
-
+    console.log(user, organizationFounded, organizationEmployed);
     const notificationToSend = await prisma.notificationSetup.findFirst({
       where: { usage: notificationTypes.SIGNUP },
     });
@@ -127,7 +127,6 @@ const UserController: UserController = {
           .status(409)
           .json({ error: "User with this email already exists" });
       }
-
       const organizationFoundedCreate = await prisma.organization.create({
         data: organizationFounded,
       });
@@ -195,6 +194,12 @@ const UserController: UserController = {
               id: user?.state ? user?.state : "unspecified",
             },
           },
+          role: {
+            connect: {
+              id: user?.role ? user?.role : "unspecified",
+            },
+          },
+          
           positionInEmployed: user.positionInEmployed,
           password: user.password,
           refreshToken: refreshToken,
@@ -812,7 +817,7 @@ export const importUsers = async (req: Request, res: Response) => {
             ],
           organizationEmployed: organizationEmployed?.name,
           positionInEmployed: row["Position in the organization employing you"],
-          roleId: "12",
+         // roleId: "12",
           createdAt: new Date(),
         };
 
@@ -947,11 +952,12 @@ export const importUsers = async (req: Request, res: Response) => {
                 id: state?.id ? state?.id : "unspecified",
               },
             },
-            role: {
-              connect: {
-                id: user?.roleId ? user?.roleId : "12",
-              },
-            },
+           //
+           //  role: {
+              // connect: {
+            //     id: user?.roleId ? user?.roleId : "12",
+            //   },
+            // },
             positionInEmployed: user.positionInEmployed,
             refreshToken: refreshToken,
             facebook: user?.facebook,

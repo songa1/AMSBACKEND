@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { isAdmin,protect } from "../middleware/auth";
 import UserController, {
   exportUsers,
   importUsers,
@@ -8,14 +9,14 @@ import { ChangeUserRole } from "../controllers/DataControllers/RoleController";
 const router = Router();
 
 // Define routes
-router.get("/", UserController.getAllUsers);
+router.get("/all", UserController.getAllUsers);
 router.get("/:userId", UserController.getUserById);
-router.post("/", UserController.createUser);
+router.post("/", protect, isAdmin, UserController.createUser);
 router.post("/import", importUsers);
 router.post("/export", exportUsers);
 router.post("/bulk", UserController.bulkAddUsers);
-router.put("/:userId", UserController.updateUser);
-router.delete("/:userId", UserController.deleteUser);
+router.put("/update/:userId", UserController.updateUser);
+router.delete("/delete/:userId", UserController.deleteUser);
 router.post("/role/:userId", ChangeUserRole);
 
 export default router;

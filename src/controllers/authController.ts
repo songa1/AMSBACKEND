@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { generateToken, hashPassword, verifyToken } from "../helpers/auth";
 import sendEmail from "../helpers/sendMail";
+import { log } from "handlebars";
 
 const prisma = new PrismaClient();
 
@@ -17,6 +18,7 @@ interface AuthController {
 const AuthController: AuthController = {
   login: async (req, res) => {
     const { email, password } = req.body;
+    console.log(email,password);
     try {
       const user = await prisma.user.findUnique({
         where: { email },
@@ -43,6 +45,7 @@ const AuthController: AuthController = {
           profileImage: true,
         },
       });
+      console.log(user,email,password)
       if (!user) {
         return res.status(401).json({ error: "Invalid credentials" });
       }
@@ -50,7 +53,7 @@ const AuthController: AuthController = {
       if (!passwordMatch) {
         return res.status(401).json({ error: "Invalid credentials" });
       }
-
+      console.log(user)
       const token = await generateToken(user);
 
       const updatedUser = await prisma.user.update({
@@ -70,7 +73,6 @@ const AuthController: AuthController = {
       return res.status(500).json({ error: "Internal Server Error" });
     }
   },
-
   changePassword: async (req, res) => {
     const { userId, pastPassword, password } = req.body;
     try {

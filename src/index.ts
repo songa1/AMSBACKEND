@@ -6,6 +6,10 @@ import cors from "cors";
 import cron from "node-cron";
 import { generateProfileUpdateNotifications } from "./controllers/notificationController";
 import path from "path";
+import swaggerUi from "swagger-ui-express";
+import { specs } from "./swagger";
+
+
 
 const app = express();
 const PORT = process.env.PORT || 7000;
@@ -37,6 +41,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use("/api", route);
+//swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs))
+
 
 app.listen(PORT, () => console.log("Server is running on port " + PORT));
 
