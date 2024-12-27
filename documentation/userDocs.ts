@@ -4,7 +4,12 @@ export const userDocs = {
   '/api/users': {
     post: {
       summary: 'Create a new user',
-      tags: ['User'],
+      tags: ['Admin'],
+      security: [
+        {
+          bearerAuth: []
+        }
+      ],
       requestBody: {
         required: true,
         content: {
