@@ -7,7 +7,6 @@ import fs from "fs";
 import csvParser from "csv-parser";
 import XLSX from "xlsx";
 import { randomUUID } from "crypto";
-import path from "path";
 import { notificationTypes } from "./notificationController";
 
 const prisma = new PrismaClient();
