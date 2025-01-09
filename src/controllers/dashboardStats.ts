@@ -10,6 +10,7 @@ export const numbersController = async (req: Request, res: Response) => {
     where: { opened: false },
   });
   const messages = await prisma.message.findMany();
+  const organizations = await prisma.organization.findMany();
   const sentNotifications = await prisma.notifications.findMany();
 
   res.status(200).send({
@@ -17,5 +18,6 @@ export const numbersController = async (req: Request, res: Response) => {
     notificationsUnopened: notificationsUnopened?.length,
     messages: messages.length,
     sentNotifications: sentNotifications.length,
+    organizations: organizations.length,
   });
 };
