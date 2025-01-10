@@ -1,9 +1,18 @@
 import { Router } from "express";
-import { getOrganizations } from "../controllers/Organization/listOrgs";
+import {
+  getOrganization,
+  getOrganizations,
+} from "../controllers/Organization/listOrgs";
+import { addOrganization } from "../controllers/Organization/createOrg";
+import { assignOrganizationToUser } from "../controllers/Organization/assignToUser";
+import { updateOrganization } from "../controllers/Organization/updateOrg";
 
 const router = Router();
 
-// Define routes
 router.get("/", getOrganizations);
+router.get("/:organizationId", getOrganization);
+router.post("/", addOrganization);
+router.patch("/", assignOrganizationToUser);
+router.put("/", updateOrganization);
 
 export default router;

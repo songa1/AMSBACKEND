@@ -4,9 +4,7 @@ import sendEmail from "../helpers/sendMail";
 import { User } from "../Types/users";
 import { generateToken } from "../helpers/auth";
 import fs from "fs";
-import csvParser from "csv-parser";
 import XLSX from "xlsx";
-import { randomUUID } from "crypto";
 import { notificationTypes } from "./notificationController";
 
 const prisma = new PrismaClient();

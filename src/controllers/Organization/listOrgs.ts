@@ -14,4 +14,37 @@ async function getOrganizations(req: Request, res: Response) {
   }
 }
 
-export { getOrganizations };
+async function getOrganization(req: Request, res: Response) {
+  try {
+    const { organizationId } = req.params;
+
+    if (!organizationId) {
+      return res.status(400).json({ error: "organizationId is required" });
+    }
+
+    // Fetch the organization by ID
+    const organization = await prisma.organization.findUnique({
+      where: { id: parseInt(organizationId, 10) },
+      include: {
+        workingSector: true,
+        country: true,
+        state: true,
+        district: true,
+        sector: true,
+      },
+    });
+
+    if (!organization) {
+      return res.status(404).json({ error: "Organization not found" });
+    }
+
+    res.status(200).json({ data: organization });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching the organization" });
+  }
+}
+
+export { getOrganizations, getOrganization };
