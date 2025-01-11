@@ -6,6 +6,7 @@ import UserController, {
 import { ChangeUserRole } from "../controllers/DataControllers/RoleController";
 import CreateUserProfile from "../controllers/Users/createUser";
 import { updateUser } from "../controllers/Users/updateUser";
+import { updateProfile } from "../controllers/Users/updatePicture";
 
 const router = Router();
 
@@ -20,5 +21,6 @@ router.post("/bulk", UserController.bulkAddUsers);
 router.put("/", updateUser);
 router.delete("/:userId", UserController.deleteUser);
 router.post("/role/:userId", ChangeUserRole);
+router.post("/picture", updateProfile);
 
 export default router;

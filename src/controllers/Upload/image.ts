@@ -2,27 +2,12 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
-import streamifier from "streamifier";
 
 const uploadToCloudinary = (filePath: string) => {
   return cloudinary.uploader.upload(filePath, {
     resource_type: "image",
   });
 };
-
-// function uploadToCloudinary(buffer: any) {
-//   return new Promise((resolve, reject) => {
-//     const upload_stream = cloudinary.uploader.upload_stream((error, result) => {
-//       if (error) {
-//         reject(error);
-//       } else {
-//         resolve(result);
-//       }
-//     });
-
-//     streamifier.createReadStream(buffer).pipe(upload_stream);
-//   });
-// }
 
 export const uploadImage = async (req: any, res: any) => {
   try {
