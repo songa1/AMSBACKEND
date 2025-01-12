@@ -45,7 +45,6 @@ async function updateOrganization(req: Request, res: Response) {
   } catch (error: any) {
     console.error(error);
 
-    // Handle specific errors if needed
     if (error.code === "P2025") {
       return res.status(404).json({ error: "Organization not found" });
     }

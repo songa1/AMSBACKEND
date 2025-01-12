@@ -73,35 +73,37 @@ const updateUser = async (req: Request, res: Response) => {
     });
 
     if (updatedUser) {
-      const notification = {
-        title: "UPDATED: Your account has been updated!",
-        message: notificationToSend!.message.replace(
-          /\[name\]/g,
-          updatedUser.firstName
-        ),
-        receiverId: updatedUser?.id,
-        opened: false,
-        createdAt: new Date(),
-      };
+      if (notificationToSend) {
+        const notification = {
+          title: "UPDATED: Your account has been updated!",
+          message:
+            notificationToSend?.message.replace(
+              /\[name\]/g,
+              updatedUser.firstName
+            ) ?? undefined,
+          receiverId: updatedUser?.id,
+          opened: false,
+          createdAt: new Date(),
+        };
 
-      await prisma.notifications.create({
-        data: notification,
-      });
+        await prisma.notifications.create({
+          data: notification,
+        });
 
-      const email = await sendEmail({
-        subject: notification.title,
-        name: updatedUser.firstName,
-        message: notificationToSend!.message.replace(
-          /\[name\]/g,
-          updatedUser.firstName
-        ),
-        receiver: updatedUser.email,
-      });
+        const email = await sendEmail({
+          subject: notification?.title,
+          name: updatedUser.firstName,
+          message: notificationToSend!.message.replace(
+            /\[name\]/g,
+            updatedUser.firstName
+          ),
+          receiver: updatedUser.email,
+        });
+      }
 
       return res.status(201).json({
         message: "User updated successfully",
         user: updatedUser,
-        ...email,
       });
     } else {
       return res.status(500).json({ message: "Updating user failed" });
