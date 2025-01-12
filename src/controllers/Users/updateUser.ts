@@ -52,7 +52,7 @@ const updateUser = async (req: Request, res: Response) => {
         whatsappNumber: user.whatsappNumber,
         gender: {
           connect: {
-            id: user.genderId ? user.genderId : "unspecified",
+            id: user.genderId ? user.genderId : 1,
           },
         },
         nearestLandmark: user.nearestLandmark,
