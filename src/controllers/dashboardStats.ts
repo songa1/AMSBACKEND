@@ -20,3 +20,21 @@ export const numbersController = async (req: Request, res: Response) => {
     organizations: organizations.length,
   });
 };
+
+export const communicationsPending = async (req: Request, res: Response) => {
+  const { userId } = req.params;
+  try {
+    const notificationsUnopened = await prisma.notifications.findMany({
+      where: { opened: false, receiverId: userId },
+    });
+    const messages = await prisma.message.findMany({
+      where: { receiverId: userId },
+    });
+    res.status(200).send({
+      notifications: notificationsUnopened?.length,
+      messages: messages?.length,
+    });
+  } catch (error: any) {
+    console.log(error);
+  }
+};

@@ -1,9 +1,12 @@
 import { Router } from "express";
-import AuthController from "../controllers/authController";
-import { numbersController } from "../controllers/dashboardStats";
+import {
+  communicationsPending,
+  numbersController,
+} from "../controllers/dashboardStats";
 
 const statsRouter = Router();
 
 statsRouter.get("/", numbersController);
+statsRouter.get("/comms/:userId", communicationsPending);
 
 export default statsRouter;
