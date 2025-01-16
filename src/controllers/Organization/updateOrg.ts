@@ -22,15 +22,35 @@ async function updateOrganization(req: Request, res: Response) {
       return res.status(400).json({ error: "organizationId is required" });
     }
 
-    // Construct the update data object
-    const updateData: any = {};
+    const updateData: Record<string, any> = {};
     if (name) updateData.name = name;
-    if (workingSectorId) updateData.workingSectorId = workingSectorId;
-    if (countryId) updateData.countryId = countryId;
-    if (stateId) updateData.stateId = stateId;
-    if (districtId) updateData.districtId = districtId;
-    if (sectorId) updateData.sectorId = sectorId;
     if (website) updateData.website = website;
+
+    if (workingSectorId) {
+      updateData.workingSector = {
+        connect: { id: workingSectorId },
+      };
+    }
+    if (countryId) {
+      updateData.country = {
+        connect: { id: countryId },
+      };
+    }
+    if (stateId) {
+      updateData.state = {
+        connect: { id: stateId },
+      };
+    }
+    if (districtId) {
+      updateData.district = {
+        connect: { id: districtId },
+      };
+    }
+    if (sectorId) {
+      updateData.sector = {
+        connect: { id: sectorId },
+      };
+    }
 
     // Update the organization
     const updatedOrganization = await prisma.organization.update({

@@ -23,9 +23,20 @@ async function assignOrganizationToUser(req: Request, res: Response) {
     // Determine which field to update
     const updateData =
       relationshipType === "founded"
-        ? { organizationFoundedId: organizationId, positionInFounded: position }
+        ? {
+            organizationFounded: {
+              connect: {
+                id: organizationId,
+              },
+            },
+            positionInFounded: position,
+          }
         : {
-            organizationEmployedId: organizationId,
+            organizationEmployed: {
+              connect: {
+                id: organizationId,
+              },
+            },
             positionInEmployed: position,
           };
 

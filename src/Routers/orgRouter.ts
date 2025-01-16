@@ -13,6 +13,6 @@ router.get("/", getOrganizations);
 router.get("/:organizationId", getOrganization);
 router.post("/", addOrganization);
 router.patch("/", assignOrganizationToUser);
-router.put("/", updateOrganization);
+router.patch("/", updateOrganization);
 
 export default router;

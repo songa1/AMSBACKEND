@@ -16,7 +16,11 @@ const updateProfile = async (req: Request, res: Response) => {
     const updatedUser = await prisma.user.update({
       where: { id: userId },
       data: {
-        profileImageId: pictureId,
+        profileImage: {
+          connect: {
+            id: pictureId,
+          },
+        },
       },
     });
 

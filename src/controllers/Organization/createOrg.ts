@@ -19,17 +19,38 @@ async function addOrganization(req: Request, res: Response) {
       return res.status(400).json({ error: "Name is required" });
     }
 
-    // Insert into the database
+    const createData: Record<string, any> = { name };
+
+    if (website) createData.website = website;
+
+    if (workingSectorId) {
+      createData.workingSector = {
+        connect: { id: workingSectorId },
+      };
+    }
+    if (countryId) {
+      createData.country = {
+        connect: { id: countryId },
+      };
+    }
+    if (stateId) {
+      createData.state = {
+        connect: { id: stateId },
+      };
+    }
+    if (districtId) {
+      createData.district = {
+        connect: { id: districtId },
+      };
+    }
+    if (sectorId) {
+      createData.sector = {
+        connect: { id: sectorId },
+      };
+    }
+
     const newOrganization = await prisma.organization.create({
-      data: {
-        name,
-        workingSectorId,
-        countryId,
-        stateId,
-        districtId,
-        sectorId,
-        website,
-      },
+      data: createData,
     });
 
     res

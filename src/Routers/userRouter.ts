@@ -18,9 +18,9 @@ router.post("/profile", CreateUserProfile);
 router.post("/import", importUsers);
 router.post("/export", exportUsers);
 router.post("/bulk", UserController.bulkAddUsers);
-router.put("/", updateUser);
+router.patch("/", updateUser);
 router.delete("/:userId", UserController.deleteUser);
 router.post("/role/:userId", ChangeUserRole);
-router.post("/picture", updateProfile);
+router.patch("/picture", updateProfile);
 
 export default router;
