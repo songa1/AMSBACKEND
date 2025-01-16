@@ -242,7 +242,6 @@ const UserController: UserController = {
 export const importUsers = async (req: Request, res: Response) => {
   try {
     const { file }: any = req.files;
-    console.log(req.files);
     const errors = [];
     const processedUsers = [];
 

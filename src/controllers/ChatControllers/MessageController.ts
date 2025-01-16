@@ -77,7 +77,7 @@ export const sendMessage = async (req: any, res: any) => {
       message = await prisma.message.create({
         data: {
           message: messageData.message,
-          senderId: messageData.senderId,
+          sender: { connect: { id: messageData.senderId } },
           public: true,
           createdAt: new Date(),
         },
@@ -86,8 +86,8 @@ export const sendMessage = async (req: any, res: any) => {
       message = await prisma.message.create({
         data: {
           message: messageData.message,
-          senderId: messageData.senderId,
-          receiverId: messageData.receiverId,
+          sender: { connect: { id: messageData.senderId } },
+          receiver: { connect: { id: messageData.receiverId } },
           public: false,
           createdAt: new Date(),
         },

@@ -30,7 +30,6 @@ export const getStatesByCountry = async (req: Request, res: Response) => {
   try {
     const countryCode = req.params.countryId;
     const states = await prisma.state.findMany({ where: { countryCode } });
-    console.log(states);
     res
       .status(200)
       .send({ message: "States", data: states, count: states.length });
