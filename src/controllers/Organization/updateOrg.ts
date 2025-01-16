@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 async function updateOrganization(req: Request, res: Response) {
   try {
     const {
-      organizationId,
+      id,
       name,
       workingSectorId,
       countryId,
@@ -18,7 +18,7 @@ async function updateOrganization(req: Request, res: Response) {
     } = req.body;
 
     // Validate the required organizationId
-    if (!organizationId) {
+    if (!id) {
       return res.status(400).json({ error: "organizationId is required" });
     }
 
@@ -54,7 +54,7 @@ async function updateOrganization(req: Request, res: Response) {
 
     // Update the organization
     const updatedOrganization = await prisma.organization.update({
-      where: { id: organizationId },
+      where: { id: id },
       data: updateData,
     });
 
