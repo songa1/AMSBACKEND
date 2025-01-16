@@ -3,7 +3,6 @@ import { Request, Response } from "express";
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-// Controller to update organization details
 async function updateOrganization(req: Request, res: Response) {
   try {
     const {
@@ -17,7 +16,6 @@ async function updateOrganization(req: Request, res: Response) {
       website,
     } = req.body;
 
-    // Validate the required organizationId
     if (!id) {
       return res.status(400).json({ error: "organizationId is required" });
     }
@@ -52,13 +50,11 @@ async function updateOrganization(req: Request, res: Response) {
       };
     }
 
-    // Update the organization
     const updatedOrganization = await prisma.organization.update({
       where: { id: id },
       data: updateData,
     });
 
-    // Respond with the updated organization
     res
       .status(200)
       .json({ data: updatedOrganization, message: "Organization updated" });

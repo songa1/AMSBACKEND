@@ -40,7 +40,7 @@ async function addOrganization(req: Request, res: Response) {
     }
     if (districtId) {
       createData.district = {
-        connect: { id: districtId },
+        connect: { name: districtId },
       };
     }
     if (sectorId) {
