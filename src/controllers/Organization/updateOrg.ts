@@ -10,7 +10,7 @@ async function updateOrganization(req: Request, res: Response) {
       name,
       workingSectorId,
       countryId,
-      stateId,
+      state,
       districtId,
       sectorId,
       website,
@@ -34,9 +34,9 @@ async function updateOrganization(req: Request, res: Response) {
         connect: { id: countryId },
       };
     }
-    if (stateId) {
+    if (state) {
       updateData.state = {
-        connect: { id: stateId },
+        connect: { id: state },
       };
     }
     if (districtId) {
