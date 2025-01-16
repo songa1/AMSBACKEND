@@ -13,7 +13,6 @@ const router = Router();
 // Define routes
 router.get("/", UserController.getAllUsers);
 router.get("/:userId", UserController.getUserById);
-router.post("/", UserController.createUser);
 router.post("/profile", CreateUserProfile);
 router.post("/import", importUsers);
 router.post("/export", exportUsers);

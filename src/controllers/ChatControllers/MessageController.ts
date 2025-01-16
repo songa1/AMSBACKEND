@@ -24,7 +24,7 @@ export const getPrivateMessages = async (req: any, res: any) => {
     const messages = await prisma.message.findMany({
       where: {
         public: false,
-        OR: [
+        AND: [
           {
             AND: [{ receiverId: id }, { senderId: oid }],
           },

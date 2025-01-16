@@ -12,7 +12,7 @@ const router = Router();
 router.get("/", getOrganizations);
 router.get("/:organizationId", getOrganization);
 router.post("/", addOrganization);
-router.patch("/", assignOrganizationToUser);
+router.patch("/assign", assignOrganizationToUser);
 router.patch("/", updateOrganization);
 
 export default router;
