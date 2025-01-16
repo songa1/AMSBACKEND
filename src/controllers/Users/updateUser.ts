@@ -19,57 +19,39 @@ const updateUser = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "User does not exist!" });
     }
 
+    const updatedUserData = {
+      ...(user.firstName && { firstName: user.firstName }),
+      ...(user.middleName && { middleName: user.middleName }),
+      ...(user.lastName && { lastName: user.lastName }),
+      ...(user.email && { email: user.email }),
+      ...(user.residentDistrictId && {
+        residentDistrict: { connect: { id: user.residentDistrictId } },
+      }),
+      ...(user.residentCountryId && {
+        residentCountry: { connect: { id: user.residentCountryId } },
+      }),
+      ...(user.state && { state: { connect: { id: user.state } } }),
+      ...(user.residentSectorId && {
+        residentSector: { connect: { id: user.residentSectorId } },
+      }),
+      ...(user.phoneNumber && { phoneNumber: user.phoneNumber }),
+      ...(user.whatsappNumber && { whatsappNumber: user.whatsappNumber }),
+      ...(user.genderId && { gender: { connect: { id: user.genderId } } }),
+      ...(user.nearestLandmark && { nearestLandmark: user.nearestLandmark }),
+      ...(user.cohortId && { cohort: { connect: { id: user.cohortId } } }),
+      ...(user.track && { track: { connect: { id: user.track } } }),
+      ...(user.bio && { bio: user.bio }),
+      ...(user.password && { password: user.password }),
+      ...(user.facebook && { facebook: user.facebook }),
+      ...(user.instagram && { instagram: user.instagram }),
+      ...(user.linkedin && { linkedin: user.linkedin }),
+      ...(user.twitter && { twitter: user.twitter }),
+      updatedAt: new Date(),
+    };
+
     const updatedUser = await prisma.user.update({
       where: { id: user?.id },
-      data: {
-        firstName: user.firstName,
-        middleName: user.middleName,
-        lastName: user.lastName,
-        email: user?.email,
-        residentDistrict: {
-          connect: {
-            id: user.residentDistrictId
-              ? user.residentDistrictId
-              : "unspecified",
-          },
-        },
-        residentCountry: {
-          connect: {
-            id: user.residentCountryId ? user.residentCountryId : "unspecified",
-          },
-        },
-        state: {
-          connect: {
-            id: user.state ? user.state : "unspecified",
-          },
-        },
-        residentSector: {
-          connect: {
-            id: user.residentSectorId ? user.residentSectorId : "unspecified",
-          },
-        },
-        phoneNumber: user.phoneNumber,
-        whatsappNumber: user.whatsappNumber,
-        gender: {
-          connect: {
-            id: user.genderId ? user.genderId : 1,
-          },
-        },
-        nearestLandmark: user.nearestLandmark,
-        cohort: {
-          connect: {
-            id: user?.cohortId ? user?.cohortId : 1,
-          },
-        },
-        track: { connect: { id: user.track ? user.track : "unspecified" } },
-        bio: user?.bio || "",
-        password: user.password,
-        facebook: user?.facebook || "",
-        instagram: user?.instagram || "",
-        linkedin: user?.linkedin || "",
-        twitter: user?.twitter || "",
-        updatedAt: new Date(),
-      },
+      data: updatedUserData,
     });
 
     if (updatedUser) {

@@ -71,6 +71,7 @@ export const getPrivateChats = async (req: any, res: any) => {
 export const sendMessage = async (req: any, res: any) => {
   const { data: messageData } = req.body;
   let message: any;
+  console.log(messageData);
   try {
     if (messageData?.receiverId == "") {
       message = await prisma.message.create({
@@ -94,8 +95,10 @@ export const sendMessage = async (req: any, res: any) => {
     }
 
     res.status(201).send({ message: "Message Sent", data: message });
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    return res
+      .status(500)
+      .json({ error: "Internal Server Error " + error?.message });
   }
 };
