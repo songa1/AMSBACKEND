@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import sendEmail from "../../helpers/sendMail";
 import { notificationTypes } from "../notificationController";
+import { User } from "../../Types/users";
 
 const prisma = new PrismaClient();
 
@@ -19,35 +20,59 @@ const updateUser = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "User does not exist!" });
     }
 
-    const updatedUserData = {
-      ...(user.firstName && { firstName: user.firstName }),
-      ...(user.middleName && { middleName: user.middleName }),
-      ...(user.lastName && { lastName: user.lastName }),
-      ...(user.email && { email: user.email }),
-      ...(user.residentDistrictId && {
-        residentDistrict: { connect: { id: user.residentDistrictId } },
-      }),
-      ...(user.residentCountryId && {
-        residentCountry: { connect: { id: user.residentCountryId } },
-      }),
-      ...(user.state && { state: { connect: { id: user.state } } }),
-      ...(user.residentSectorId && {
-        residentSector: { connect: { id: user.residentSectorId } },
-      }),
-      ...(user.phoneNumber && { phoneNumber: user.phoneNumber }),
-      ...(user.whatsappNumber && { whatsappNumber: user.whatsappNumber }),
-      ...(user.genderId && { gender: { connect: { id: user.genderId } } }),
-      ...(user.nearestLandmark && { nearestLandmark: user.nearestLandmark }),
-      ...(user.cohortId && { cohort: { connect: { id: user.cohortId } } }),
-      ...(user.track && { track: { connect: { id: user.track } } }),
-      ...(user.bio && { bio: user.bio }),
-      ...(user.password && { password: user.password }),
-      ...(user.facebook && { facebook: user.facebook }),
-      ...(user.instagram && { instagram: user.instagram }),
-      ...(user.linkedin && { linkedin: user.linkedin }),
-      ...(user.twitter && { twitter: user.twitter }),
-      updatedAt: new Date(),
-    };
+    const updatedUserData: any = {};
+
+    if (user.firstName !== undefined)
+      updatedUserData.firstName = user.firstName;
+    if (user.middleName !== undefined)
+      updatedUserData.middleName = user.middleName;
+    if (user.lastName !== undefined) updatedUserData.lastName = user.lastName;
+    if (user.email !== undefined) updatedUserData.email = user.email;
+
+    // Conditional relationships
+    if (user.residentDistrictId !== undefined) {
+      updatedUserData.residentDistrict = {
+        connect: { id: user.residentDistrictId },
+      };
+    }
+    if (user.residentCountryId !== undefined) {
+      updatedUserData.residentCountry = {
+        connect: { id: user.residentCountryId },
+      };
+    }
+    if (user.state !== undefined) {
+      updatedUserData.state = { connect: { id: user.state } };
+    }
+    if (user.residentSectorId !== undefined) {
+      updatedUserData.residentSector = {
+        connect: { id: user.residentSectorId },
+      };
+    }
+
+    if (user.phoneNumber !== undefined)
+      updatedUserData.phoneNumber = user.phoneNumber;
+    if (user.whatsappNumber !== undefined)
+      updatedUserData.whatsappNumber = user.whatsappNumber;
+    if (user.genderId !== undefined) {
+      updatedUserData.gender = { connect: { id: user.genderId } };
+    }
+    if (user.nearestLandmark !== undefined)
+      updatedUserData.nearestLandmark = user.nearestLandmark;
+    if (user.cohortId !== undefined) {
+      updatedUserData.cohort = { connect: { id: user.cohortId } };
+    }
+    if (user.track !== undefined) {
+      updatedUserData.track = { connect: { id: user.track } };
+    }
+    if (user.bio !== undefined) updatedUserData.bio = user.bio;
+    if (user.facebook !== undefined) updatedUserData.facebook = user.facebook;
+    if (user.instagram !== undefined)
+      updatedUserData.instagram = user.instagram;
+    if (user.linkedin !== undefined) updatedUserData.linkedin = user.linkedin;
+    if (user.twitter !== undefined) updatedUserData.twitter = user.twitter;
+
+    // Always update the updatedAt field
+    updatedUserData.updatedAt = new Date();
 
     const updatedUser = await prisma.user.update({
       where: { id: user?.id },

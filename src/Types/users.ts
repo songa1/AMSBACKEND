@@ -11,7 +11,9 @@ export interface User {
   residentCountryId: string | null;
   residentCountry: Country | null;
   residentDistrictId: string | null;
+  residentDistrict: District | null;
   residentSectorId: string | null;
+  residentSector: Sector | null;
   cohortId: number | null;
   track: Track | null;
   isRwandan: boolean | null;
@@ -45,6 +47,18 @@ export interface Country {
   id: string;
   name: string;
   createdAt: string;
+}
+
+export interface District {
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Sector {
+  name: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface State {
