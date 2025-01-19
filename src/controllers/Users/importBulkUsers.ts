@@ -23,7 +23,7 @@ export const importUsers = async (req: Request, res: Response) => {
       try {
         if (item?.email === "") {
           errors.push({
-            message: "This user has no email, skipping!",
+            message: "Member " + item?.firstName + " has no email, skipping!",
             item,
           });
           failedUsers.push(item);
@@ -36,7 +36,7 @@ export const importUsers = async (req: Request, res: Response) => {
 
         if (existingUser) {
           errors.push({
-            message: "This user already exists, skipping!",
+            message: "Member " + item?.email + " already exists, skipping!",
             item,
           });
           continue;
