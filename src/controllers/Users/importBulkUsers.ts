@@ -2,14 +2,13 @@ import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import sendEmail from "../../helpers/sendMail";
 import { generateToken } from "../../helpers/auth";
-import { importedUser } from "../../Types/users";
 import { notificationTypes } from "../notificationController";
 
 const prisma = new PrismaClient();
 
 export const importUsers = async (req: Request, res: Response) => {
   try {
-    const { selectedData }: any = req.files;
+    const { selectedData }: any = req.body;
     const errors: any = [];
     const processedUsers: any = [];
     const bulkOrganizations = [];
