@@ -91,3 +91,33 @@ export interface Payload {
   role: Role;
   id: string;
 }
+
+export interface importedUser {
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  whatsappNumber: string;
+  residentCountry: string;
+  state: string;
+  residentDistrict: string;
+  residentSector: string;
+  nearestLandmark: string;
+  cohort: string;
+  track: string;
+  initiativeName: string;
+  initiativeSector: string;
+  initiativePosition: string;
+  initiativeAddress: string;
+  initiativeWebsite: string;
+  employerName: string;
+  employerPosition: string;
+  employerWebsite: string;
+  employerAddress: string;
+  gender: string;
+  linkedin: string;
+  instagram: string;
+  facebook: string;
+  twitter: string;
+}
