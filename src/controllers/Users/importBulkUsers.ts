@@ -267,7 +267,7 @@ export const importUsers = async (req: Request, res: Response) => {
             /\[name\]/g,
             item?.firstName
           ),
-          receiverId: UC?.id,
+          receiverId: US?.id,
           opened: false,
           createdAt: new Date(),
         };
