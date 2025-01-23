@@ -24,23 +24,22 @@ export const getPrivateMessages = async (req: any, res: any) => {
     const messages = await prisma.message.findMany({
       where: {
         public: false,
-        AND: [
-          {
-            AND: [{ receiverId: id }, { senderId: oid }],
-          },
-          {
-            AND: [{ receiverId: oid }, { senderId: id }],
-          },
-        ],
       },
       include: {
         sender: true,
         receiver: true,
       },
     });
-    res
-      .status(200)
-      .send({ message: "Messages", data: messages, count: messages.length });
+    const filteredMessages = messages.filter(
+      (message) =>
+        (message.receiverId == oid && message.senderId == id) ||
+        (message.receiverId == id && message.senderId == oid)
+    );
+    res.status(200).send({
+      message: "Messages",
+      data: filteredMessages,
+      count: filteredMessages.length,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal Server Error" });
@@ -52,16 +51,21 @@ export const getPrivateChats = async (req: any, res: any) => {
     const messages = await prisma.message.findMany({
       where: {
         public: false,
-        OR: [{ senderId: req.params.id }, { receiverId: req.params.id }],
       },
       include: {
         sender: true,
         receiver: true,
       },
     });
-    res
-      .status(200)
-      .send({ message: "Messages", data: messages, count: messages.length });
+    const filteredMessages = messages.filter(
+      (message) =>
+        message.receiverId == req.params.id || message.senderId == req.params.id
+    );
+    res.status(200).send({
+      message: "Messages",
+      data: filteredMessages,
+      count: filteredMessages.length,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal Server Error" });
