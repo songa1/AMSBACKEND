@@ -38,6 +38,12 @@ async function updateOrganization(req: Request, res: Response) {
       updateData.state = {
         connect: { id: state },
       };
+      updateData.district = {
+        connect: { id: "unspecified" },
+      };
+      updateData.sector = {
+        connect: { id: "unspecified" },
+      };
     }
     if (districtId) {
       updateData.district = {

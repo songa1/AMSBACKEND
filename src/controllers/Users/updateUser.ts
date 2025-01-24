@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import sendEmail from "../../helpers/sendMail";
 import { notificationTypes } from "../notificationController";
-import { User } from "../../Types/users";
 
 const prisma = new PrismaClient();
 
@@ -61,8 +60,8 @@ const updateUser = async (req: Request, res: Response) => {
     if (user.cohortId !== undefined) {
       updatedUserData.cohort = { connect: { id: user.cohortId } };
     }
-    if (user.track !== undefined) {
-      updatedUserData.track = { connect: { id: user.track } };
+    if (user.trackId !== undefined) {
+      updatedUserData.track = { connect: { id: user.trackId } };
     }
     if (user.bio !== undefined) updatedUserData.bio = user.bio;
     if (user.facebook !== undefined) updatedUserData.facebook = user.facebook;
