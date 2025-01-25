@@ -101,7 +101,7 @@ export const importUsers = async (req: Request, res: Response) => {
           createdAt: new Date(),
         };
 
-        const refreshToken = await generateToken(user);
+        const refreshToken = generateToken(user);
 
         const [OFWS, EC, FC, UC, cohort, track, sector, state] =
           await Promise.all([
