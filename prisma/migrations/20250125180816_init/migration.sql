@@ -116,6 +116,7 @@ CREATE TABLE `User` (
     `organizationFoundedId` INTEGER NULL,
     `positionInFounded` VARCHAR(191) NULL,
     `organizationEmployedId` INTEGER NULL,
+    `fieldOfStudy` VARCHAR(191) NULL,
     `positionInEmployed` VARCHAR(191) NULL,
     `password` VARCHAR(191) NOT NULL DEFAULT 'pass',
     `refreshToken` VARCHAR(1024) NULL,
@@ -133,7 +134,7 @@ CREATE TABLE `User` (
 -- CreateTable
 CREATE TABLE `Message` (
     `id` VARCHAR(191) NOT NULL,
-    `message` VARCHAR(191) NOT NULL,
+    `message` VARCHAR(1000) NOT NULL,
     `senderId` VARCHAR(191) NULL,
     `receiverId` VARCHAR(191) NULL,
     `public` BOOLEAN NOT NULL DEFAULT true,
@@ -147,7 +148,7 @@ CREATE TABLE `Message` (
 -- CreateTable
 CREATE TABLE `Notifications` (
     `id` VARCHAR(191) NOT NULL,
-    `message` VARCHAR(191) NOT NULL,
+    `message` VARCHAR(1000) NOT NULL,
     `title` VARCHAR(191) NOT NULL,
     `receiverId` VARCHAR(191) NULL,
     `opened` BOOLEAN NOT NULL,
