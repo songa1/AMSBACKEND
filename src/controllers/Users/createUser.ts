@@ -32,67 +32,66 @@ const CreateUserProfile = async (req: Request, res: Response) => {
 
     const refreshToken = generateToken(user);
 
-    const newUserData: any = {};
-
-    if (user?.firstName !== undefined) newUserData.firstName = user?.firstName;
-    if (user?.middleName !== undefined)
-      newUserData.middleName = user?.middleName;
-    if (user?.lastName !== undefined) newUserData.lastName = user?.lastName;
-    if (user?.email !== undefined) newUserData.email = user?.email;
-
-    // Conditional relationships
-    if (user?.residentDistrictId !== undefined) {
-      newUserData.residentDistrict = {
-        connect: { id: user?.residentDistrictId },
-      };
-    }
-    if (user?.residentCountryId !== undefined) {
-      newUserData.residentCountry = {
-        connect: { id: user?.residentCountryId },
-      };
-    }
-    if (user?.state !== undefined) {
-      newUserData.state = { connect: { id: user?.state } };
-      newUserData.residentDistrict = {
-        connect: { id: "unspecified" },
-      };
-      newUserData.residentSector = {
-        connect: { id: "unspecified" },
-      };
-    }
-    if (user?.residentSectorId !== undefined) {
-      newUserData.residentSector = {
-        connect: { id: user?.residentSectorId },
-      };
-    }
-
-    if (user?.phoneNumber !== undefined)
-      newUserData.phoneNumber = user?.phoneNumber;
-    if (user?.whatsappNumber !== undefined)
-      newUserData.whatsappNumber = user?.whatsappNumber;
-    if (user?.genderId !== undefined) {
-      newUserData.gender = { connect: { id: user?.genderId } };
-    }
-    if (user?.nearestLandmark !== undefined)
-      newUserData.nearestLandmark = user?.nearestLandmark;
-    if (user?.cohortId !== undefined) {
-      newUserData.cohort = { connect: { id: user?.cohortId } };
-    }
-    if (user?.trackId !== undefined) {
-      newUserData.track = { connect: { id: user?.trackId } };
-    }
-    if (user?.bio !== undefined) newUserData.bio = user?.bio;
-    if (user?.facebook !== undefined) newUserData.facebook = user?.facebook;
-    if (user?.instagram !== undefined) newUserData.instagram = user.instagram;
-    if (user?.linkedin !== undefined) newUserData.linkedin = user.linkedin;
-    if (user?.twitter !== undefined) newUserData.twitter = user.twitter;
-
-    // Additional properties
-    newUserData.refreshToken = refreshToken;
-    newUserData.createdAt = new Date();
-
     const createdUser = await prisma.user.create({
-      data: newUserData,
+      data: {
+        firstName: user.firstName,
+        middleName: user.middleName,
+        lastName: user.lastName,
+        email: user.email,
+        residentCountry: {
+          connect: {
+            id: user?.residentCountryId
+              ? user?.residentCountryId
+              : "unspecified",
+          },
+        },
+        residentDistrict: {
+          connect: {
+            id: user.residentDistrictId
+              ? user?.residentDistrictId
+              : "unspecified",
+          },
+        },
+        residentSector: {
+          connect: {
+            id: user.residentSectorId ? user?.residentSectorId : "unspecified",
+          },
+        },
+        phoneNumber: user.phoneNumber,
+        whatsappNumber: user.whatsappNumber,
+        gender: {
+          connect: {
+            name: user.genderName ? user?.genderName : "Not Specified",
+          },
+        },
+        nearestLandmark: user.nearestLandmark,
+        cohort: { connect: { id: user.cohortId ? user?.cohortId : 1 } },
+        track: {
+          connect: { id: user.trackId ? user?.trackId : "unspecified" },
+        },
+        profileImage: {
+          connect: {
+            id: user?.profileImageId ? user?.profileImageId : "default",
+          },
+        },
+        bio: user?.bio || "",
+        state: {
+          connect: {
+            id: user?.state ? user?.state : "unspecified",
+          },
+        },
+        password: user.password,
+        positionInEmployed: undefined,
+        positionInFounded: undefined,
+        organizationEmployedId: undefined,
+        organizationFoundedId: undefined,
+        refreshToken: refreshToken,
+        facebook: user?.facebook || "",
+        instagram: user?.instagram || "",
+        linkedin: user?.linkedin || "",
+        twitter: user?.twitter || "",
+        createdAt: new Date(),
+      },
     });
 
     if (createdUser) {
@@ -140,7 +139,7 @@ const CreateUserProfile = async (req: Request, res: Response) => {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
-};
+}
 
 const createFoundedOrganization = (req: Request, res: Response) => {
   try {
