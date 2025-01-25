@@ -66,9 +66,7 @@ const CreateUserProfile = async (req: Request, res: Response) => {
         },
         nearestLandmark: user.nearestLandmark,
         cohort: { connect: { id: user.cohortId ? user?.cohortId : 1 } },
-        track: {
-          connect: { id: user.trackId ? user?.trackId : "unspecified" },
-        },
+        trackId: user.trackId ? user?.trackId : undefined,
         profileImage: {
           connect: {
             id: user?.profileImageId ? user?.profileImageId : "default",
@@ -139,7 +137,7 @@ const CreateUserProfile = async (req: Request, res: Response) => {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
-}
+};
 
 const createFoundedOrganization = (req: Request, res: Response) => {
   try {
