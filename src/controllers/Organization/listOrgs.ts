@@ -24,7 +24,7 @@ async function getOrganization(req: Request, res: Response) {
 
     // Fetch the organization by ID
     const organization = await prisma.organization.findUnique({
-      where: { id: parseInt(organizationId, 10) },
+      where: { id: parseInt(organizationId) },
       include: {
         workingSector: true,
         country: true,

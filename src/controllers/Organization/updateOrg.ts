@@ -20,6 +20,8 @@ async function updateOrganization(req: Request, res: Response) {
       return res.status(400).json({ error: "organizationId is required" });
     }
 
+    const district = await prisma.
+
     const updateData: Record<string, any> = {};
     if (name) updateData.name = name;
     if (website) updateData.website = website;
@@ -47,7 +49,7 @@ async function updateOrganization(req: Request, res: Response) {
     }
     if (districtId) {
       updateData.district = {
-        connect: { id: districtId },
+        connect: { name: districtId },
       };
     }
     if (sectorId) {
