@@ -17,9 +17,11 @@ export const getCountries = async (req: Request, res: Response) => {
 export const getStates = async (req: Request, res: Response) => {
   try {
     const states = await prisma.state.findMany();
-    res
-      .status(200)
-      .send({ message: "States", data: states, count: states.length });
+    res.status(200).send({
+      message: "States",
+      data: states.filter((s) => s?.id !== "unspecified"),
+      count: states.length,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal Server Error" });
@@ -42,9 +44,11 @@ export const getStatesByCountry = async (req: Request, res: Response) => {
 export const getDistricts = async (req: Request, res: Response) => {
   try {
     const districts = await prisma.district.findMany();
-    res
-      .status(200)
-      .send({ message: "Districts", data: districts, count: districts.length });
+    res.status(200).send({
+      message: "Districts",
+      data: districts.filter((s) => s?.id !== "unspecified"),
+      count: districts.length,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal Server Error" });
@@ -67,9 +71,11 @@ export const getDistrict = async (req: Request, res: Response) => {
 export const getSectors = async (req: Request, res: Response) => {
   try {
     const sectors = await prisma.sector.findMany();
-    res
-      .status(200)
-      .send({ message: "Sectors", data: sectors, count: sectors.length });
+    res.status(200).send({
+      message: "Sectors",
+      data: sectors.filter((s) => s?.id !== "unspecified"),
+      count: sectors.length,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal Server Error" });

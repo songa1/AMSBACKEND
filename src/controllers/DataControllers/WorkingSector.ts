@@ -7,7 +7,7 @@ export const getWorkingSector = async (req: Request, res: Response) => {
     const workingSectors = await prisma.workingSector.findMany();
     res.status(200).send({
       message: "Tracks",
-      data: workingSectors,
+      data: workingSectors.filter((s) => s?.id !== "unspecified"),
       count: workingSectors.length,
     });
   } catch (error) {
