@@ -148,7 +148,7 @@ const AuthController: AuthController = {
         },
       });
       if (user) {
-        const refreshToken = await generateToken(user);
+        const refreshToken = generateToken(user);
         const updatedUser = await prisma.user.update({
           where: { id: user.id },
           data: { refreshToken },

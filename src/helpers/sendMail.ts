@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
 async function sendEmail(replacements: Email) {
   try {
     const info = await transporter.sendMail({
-      from: `"Alumni Management System" <${process.env.EMAIL_USERNAME}>`,
+      from: `"YALI Rwanda - Alumni Management System" <${process.env.EMAIL_USERNAME}>`,
       to: replacements?.receiver,
       subject: replacements?.subject,
       html: `
@@ -54,6 +54,7 @@ async function sendEmail(replacements: Email) {
 
     return { status: 200, messageId: info.messageId };
   } catch (error: any) {
+    console.log(error);
     return { status: 500, message: error.message };
   }
 }
