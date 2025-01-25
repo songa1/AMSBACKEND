@@ -163,7 +163,7 @@ const AuthController: AuthController = {
               We received a request to reset your password. Please click on the link below to reset your password:
             </p>
             <p style="font-size: 16px; line-height: 1.5;">
-              <a href="${process.env.FRONTEND_URL}/reset-password/${updatedUser.refreshToken}" style="color: #0073e6; text-decoration: none;">
+              <a href="${process.env.FRONTEND_URL}/reset-password/${updatedUser.refreshToken}+email+${user?.email}" style="color: #0073e6; text-decoration: none;">
                 Reset Password
               </a>
             </p>

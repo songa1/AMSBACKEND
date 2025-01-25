@@ -253,7 +253,7 @@ export const importUsers = async (req: Request, res: Response) => {
     Your profile has been successfully created on YALI Alumni Management System (AMS). Please use the link below to set your password:
   </p>
   <p style="font-size: 16px; line-height: 1.5;">
-    <a href="${process.env.FRONTEND_URL}/reset-password/${US.refreshToken}" style="color: #0073e6; text-decoration: none;">
+    <a href="${process.env.FRONTEND_URL}/reset-password/${US.refreshToken}+email+${user?.email}" style="color: #0073e6; text-decoration: none;">
       Set your password
     </a>
   </p>
