@@ -122,6 +122,7 @@ model User {
   positionInFounded      String?
   organizationEmployedId Int?
   organizationEmployed   Organization?       @relation("EmployedOrganization", references: [id], fields: [organizationEmployedId])
+  fieldOfStudy           String?
   positionInEmployed     String?
   password               String              @default("pass")
   refreshToken           String?             @db.VarChar(1024)

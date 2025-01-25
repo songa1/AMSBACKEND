@@ -85,6 +85,7 @@ export const importUsers = async (req: Request, res: Response) => {
           facebook: item?.facebook,
           twitter: item?.twitter,
           genderName: item?.gender,
+          fieldOfStudy: item?.fieldOfStudy,
           residentCountry: item?.residentCountry,
           state: item?.state,
           residentDistrict: item?.residentDistrict,
@@ -205,6 +206,7 @@ export const importUsers = async (req: Request, res: Response) => {
             },
             phoneNumber: user.phoneNumber,
             whatsappNumber: user.whatsappNumber,
+            fieldOfStudy: user?.fieldOfStudy,
             gender: {
               connect: {
                 name: user.genderName ? user?.genderName : "Not Specified",

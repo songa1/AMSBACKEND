@@ -56,6 +56,8 @@ const updateUser = async (req: Request, res: Response) => {
 
     if (user?.phoneNumber !== undefined)
       updatedUserData.phoneNumber = user?.phoneNumber;
+    if (user?.fieldOfStudy !== undefined)
+      updatedUserData.fieldOfStudy = user?.fieldOfStudy;
     if (user?.whatsappNumber !== undefined)
       updatedUserData.whatsappNumber = user?.whatsappNumber;
     if (user?.genderId !== undefined) {

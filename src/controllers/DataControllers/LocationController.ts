@@ -5,9 +5,11 @@ const prisma = new PrismaClient();
 export const getCountries = async (req: Request, res: Response) => {
   try {
     const countries = await prisma.country.findMany();
-    res
-      .status(200)
-      .send({ message: "Countries", data: countries, count: countries.length });
+    res.status(200).send({
+      message: "Countries",
+      data: countries.filter((s) => s?.id !== "unspecified"),
+      count: countries.length,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal Server Error" });

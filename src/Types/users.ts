@@ -25,6 +25,7 @@ export interface User {
   instagram: string;
   facebook: string;
   twitter: string;
+  fieldOfStudy: string;
   state: State;
   organizationFoundedId: number | null;
   positionInFounded: string | null;
