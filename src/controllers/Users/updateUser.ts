@@ -21,54 +21,60 @@ const updateUser = async (req: Request, res: Response) => {
 
     const updatedUserData: any = {};
 
-    if (user.firstName !== undefined)
-      updatedUserData.firstName = user.firstName;
-    if (user.middleName !== undefined)
-      updatedUserData.middleName = user.middleName;
-    if (user.lastName !== undefined) updatedUserData.lastName = user.lastName;
-    if (user.email !== undefined) updatedUserData.email = user.email;
+    if (user?.firstName !== undefined)
+      updatedUserData.firstName = user?.firstName;
+    if (user?.middleName !== undefined)
+      updatedUserData.middleName = user?.middleName;
+    if (user?.lastName !== undefined) updatedUserData.lastName = user?.lastName;
+    if (user?.email !== undefined) updatedUserData.email = user?.email;
 
     // Conditional relationships
-    if (user.residentDistrictId !== undefined) {
+    if (user?.residentDistrictId !== undefined) {
       updatedUserData.residentDistrict = {
-        connect: { id: user.residentDistrictId },
+        connect: { id: user?.residentDistrictId },
       };
     }
-    if (user.residentCountryId !== undefined) {
+    if (user?.residentCountryId !== undefined) {
       updatedUserData.residentCountry = {
-        connect: { id: user.residentCountryId },
+        connect: { id: user?.residentCountryId },
       };
     }
-    if (user.state !== undefined) {
-      updatedUserData.state = { connect: { id: user.state } };
-    }
-    if (user.residentSectorId !== undefined) {
+    if (user?.state !== undefined) {
+      updatedUserData.state = { connect: { id: user?.state } };
+      updatedUserData.residentDistrict = {
+        connect: { id: "unspecified" },
+      };
       updatedUserData.residentSector = {
-        connect: { id: user.residentSectorId },
+        connect: { id: "unspecified" },
+      };
+    }
+    if (user?.residentSectorId !== undefined) {
+      updatedUserData.residentSector = {
+        connect: { id: user?.residentSectorId },
       };
     }
 
-    if (user.phoneNumber !== undefined)
-      updatedUserData.phoneNumber = user.phoneNumber;
-    if (user.whatsappNumber !== undefined)
-      updatedUserData.whatsappNumber = user.whatsappNumber;
-    if (user.genderId !== undefined) {
-      updatedUserData.gender = { connect: { id: user.genderId } };
+    if (user?.phoneNumber !== undefined)
+      updatedUserData.phoneNumber = user?.phoneNumber;
+    if (user?.whatsappNumber !== undefined)
+      updatedUserData.whatsappNumber = user?.whatsappNumber;
+    if (user?.genderId !== undefined) {
+      updatedUserData.gender = { connect: { id: user?.genderId } };
     }
-    if (user.nearestLandmark !== undefined)
-      updatedUserData.nearestLandmark = user.nearestLandmark;
-    if (user.cohortId !== undefined) {
-      updatedUserData.cohort = { connect: { id: user.cohortId } };
+    if (user?.nearestLandmark !== undefined)
+      updatedUserData.nearestLandmark = user?.nearestLandmark;
+    if (user?.cohortId !== undefined) {
+      updatedUserData.cohort = { connect: { id: user?.cohortId } };
     }
-    if (user.trackId !== undefined) {
-      updatedUserData.track = { connect: { id: user.trackId } };
+    if (user?.trackId !== undefined) {
+      updatedUserData.track = { connect: { id: user?.trackId } };
     }
-    if (user.bio !== undefined) updatedUserData.bio = user.bio;
-    if (user.facebook !== undefined) updatedUserData.facebook = user.facebook;
-    if (user.instagram !== undefined)
+    if (user?.bio !== undefined) updatedUserData.bio = user?.bio;
+    if (user?.facebook !== undefined) updatedUserData.facebook = user?.facebook;
+    if (user?.instagram !== undefined)
       updatedUserData.instagram = user.instagram;
-    if (user.linkedin !== undefined) updatedUserData.linkedin = user.linkedin;
-    if (user.twitter !== undefined) updatedUserData.twitter = user.twitter;
+    if (user?.linkedin !== undefined) updatedUserData.linkedin = user.linkedin;
+    if (user?.twitter !== undefined) updatedUserData.twitter = user.twitter;
 
     // Always update the updatedAt field
     updatedUserData.updatedAt = new Date();
