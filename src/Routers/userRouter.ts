@@ -1,16 +1,14 @@
 import { Router } from "express";
-import UserController, {
-  exportUsers,
-} from "../controllers/userController";
+import UserController from "../controllers/userController";
 import { ChangeUserRole } from "../controllers/DataControllers/RoleController";
 import CreateUserProfile from "../controllers/Users/createUser";
 import { updateUser } from "../controllers/Users/updateUser";
 import { updateProfile } from "../controllers/Users/updatePicture";
 import { importUsers } from "../controllers/Users/importBulkUsers";
+import { exportUsers } from "../controllers/Users/exportUsers";
 
 const router = Router();
 
-// Define routes
 router.get("/", UserController.getAllUsers);
 router.get("/:userId", UserController.getUserById);
 router.post("/profile", CreateUserProfile);

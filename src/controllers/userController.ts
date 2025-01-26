@@ -1,8 +1,5 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import sendEmail from "../helpers/sendMail";
-import { User } from "../Types/users";
-import XLSX from "xlsx";
 
 const prisma = new PrismaClient();
 
@@ -124,73 +121,6 @@ const UserController: UserController = {
       return res.status(500).json({ error: "Internal Server Error" });
     }
   },
-};
-
-export const exportUsers = async (req: Request, res: Response) => {
-  try {
-    const users = await prisma.user.findMany({
-      include: {
-        organizationEmployed: true,
-        organizationFounded: true,
-        residentCountry: true,
-        residentDistrict: true,
-        residentSector: true,
-        state: true,
-        cohort: true,
-        track: true,
-      },
-    });
-
-    const formattedData = users.map((user) => ({
-      "First Name": user.firstName,
-      "Middle Name": user.middleName,
-      "Last Name": user.lastName,
-      "Email Address": user.email,
-      "Phone Number": user.phoneNumber,
-      "WhatsApp Number": user.whatsappNumber,
-      "LinkedIn Profile": user.linkedin,
-      "Instagram Profile": user.instagram,
-      "Facebook Profile": user.facebook,
-      "Twitter Profile": user.twitter,
-      Gender: user.genderName,
-      "Country of Residence": user.residentCountry?.name,
-      "District of Residence": user.residentDistrict?.name || "",
-      State: user.state?.name || "",
-      "Sector of Residence": user.residentSector?.name || "",
-      "Nearest Landmark": user.nearestLandmark || "",
-      Cohort: user.cohort?.name || "",
-      Track: user.track?.name || "",
-      "Organization Founded": user.organizationFounded?.name || "",
-      "Position in Organization Founded": user.positionInFounded || "",
-      "Organization Employed": user.organizationEmployed?.name || "",
-      "Position in Organization Employed": user.positionInEmployed || "",
-      "Last Updated Date": user?.updatedAt || "",
-    }));
-
-    const workbook = XLSX.utils.book_new();
-    const worksheet: any = XLSX.utils.json_to_sheet(formattedData);
-
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Users");
-
-    const excelBuffer = XLSX.write(workbook, {
-      type: "buffer",
-      bookType: "xlsx",
-    });
-
-    res.setHeader(
-      "Content-Disposition",
-      'attachment; filename="users_data.xlsx"'
-    );
-    res.setHeader(
-      "Content-Type",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    );
-    res.send({ data: excelBuffer });
-  } catch (error: any) {
-    return res
-      .status(500)
-      .send({ message: "An error occurred while exporting users.", error });
-  }
 };
 
 export default UserController;
