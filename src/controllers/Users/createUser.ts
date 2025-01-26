@@ -61,12 +61,12 @@ const CreateUserProfile = async (req: Request, res: Response) => {
         whatsappNumber: user.whatsappNumber,
         gender: {
           connect: {
-            name: user.genderName ? user?.genderName : "Not Specified",
+            name: user?.genderName ? user?.genderName : "Not Specified",
           },
         },
         nearestLandmark: user.nearestLandmark,
-        cohort: { connect: { id: user.cohortId ? user?.cohortId : 1 } },
-        trackId: user.trackId ? user?.trackId : undefined,
+        cohort: { connect: { id: user?.cohortId ? user?.cohortId : 1 } },
+        trackId: user?.trackId ? user?.trackId : "unspecified",
         profileImage: {
           connect: {
             id: user?.profileImageId ? user?.profileImageId : "default",
