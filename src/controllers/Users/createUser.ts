@@ -66,7 +66,9 @@ const CreateUserProfile = async (req: Request, res: Response) => {
         },
         nearestLandmark: user.nearestLandmark,
         cohort: { connect: { id: user?.cohortId ? user?.cohortId : 1 } },
-        trackId: user?.trackId ? user?.trackId : "unspecified",
+        track: {
+          connect: { id: user?.trackId ? user?.trackId : "unspecified" },
+        },
         profileImage: {
           connect: {
             id: user?.profileImageId ? user?.profileImageId : "default",
