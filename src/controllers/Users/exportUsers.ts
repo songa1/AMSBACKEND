@@ -29,6 +29,7 @@ export const exportUsers = async (req: Request, res: Response) => {
         residentCountry: true,
         residentDistrict: true,
         residentSector: true,
+        profileImage: true,
         gender: true,
         state: true,
         cohort: true,
@@ -76,6 +77,7 @@ export const exportUsers = async (req: Request, res: Response) => {
       "X (Twitter) Profile Link (https://x.com/...)": user?.twitter,
       "Last Updated Date": user?.updatedAt,
       "Time Joined": user?.createdAt,
+      "Profile Picture": user?.profileImage?.link,
     }));
 
     const workbook = XLSX.utils.book_new();

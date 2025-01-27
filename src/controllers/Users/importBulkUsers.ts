@@ -97,13 +97,14 @@ export const importUsers = async (req: Request, res: Response) => {
           positionInFounded: item?.initiativePosition,
           organizationEmployed: organizationEmployed?.name,
           positionInEmployed: item?.employerPosition,
+          profileImage: item?.profileImage,
           roleId: "12",
           createdAt: new Date(),
         };
 
         const refreshToken = generateToken(user);
 
-        const [OFWS, EC, FC, UC, cohort, track, sector, state] =
+        const [OFWS, EC, FC, UC, cohort, track, sector, state, picture] =
           await Promise.all([
             prisma.workingSector.findFirst({
               where: { name: item?.initiativeSector },
@@ -132,6 +133,12 @@ export const importUsers = async (req: Request, res: Response) => {
             prisma.state.findFirst({
               where: {
                 name: item?.state,
+              },
+            }),
+            prisma.image.create({
+              data: {
+                link: item?.profileImage,
+                name: item?.firstName + "_picture",
               },
             }),
           ]);
@@ -235,6 +242,11 @@ export const importUsers = async (req: Request, res: Response) => {
               },
             },
             positionInEmployed: user.positionInEmployed,
+            profileImage: {
+              connect: {
+                id: picture?.id ? picture?.id : "default",
+              },
+            },
             refreshToken: refreshToken,
             facebook: user?.facebook,
             instagram: user?.instagram,
