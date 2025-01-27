@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { subDays, subMinutes, subMonths, subWeeks } from "date-fns";
+import { subDays, subMonths } from "date-fns";
 import { Request, Response } from "express";
 
 const prisma = new PrismaClient();
@@ -37,8 +37,9 @@ export async function generateProfileUpdateNotifications() {
 
   const notifications = users.map((user) => ({
     title: "UPDATE: You need to update your profile",
-    message: notification!.message.replace(/\[name\]/g, user.firstName),
-    receiverId: user.id,
+    message: notification!.message.replace(/\[name\]/g, user?.firstName),
+    receiverId: user?.id,
+    actions: notification?.link,
     opened: false,
     createdAt: new Date(),
   }));
@@ -62,6 +63,7 @@ export const getUsersNotifications = async (req: Request, res: Response) => {
     });
     res.status(200).send({ message: "All notifications", notifications });
   } catch (error) {
+    console.log(error);
     console.log(error);
     res.status(500).json({ error: "Internal Server Error" });
   }

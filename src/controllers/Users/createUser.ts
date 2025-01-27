@@ -119,6 +119,7 @@ const CreateUserProfile = async (req: Request, res: Response) => {
           /\[name\]/g,
           createdUser?.firstName
         ),
+        actions: notificationToSend?.link,
         receiverId: createdUser?.id,
         opened: false,
         createdAt: new Date(),
@@ -140,12 +141,6 @@ const CreateUserProfile = async (req: Request, res: Response) => {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
-};
-
-const createFoundedOrganization = (req: Request, res: Response) => {
-  try {
-    const { userId } = req.body;
-  } catch (error: any) {}
 };
 
 export default CreateUserProfile;

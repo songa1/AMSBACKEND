@@ -96,6 +96,7 @@ const updateUser = async (req: Request, res: Response) => {
               updatedUser.firstName
             ) ?? undefined,
           receiverId: updatedUser?.id,
+          actions: notificationToSend?.link,
           opened: false,
           createdAt: new Date(),
         };
@@ -104,7 +105,7 @@ const updateUser = async (req: Request, res: Response) => {
           data: notification,
         });
 
-        const email = await sendEmail({
+        await sendEmail({
           subject: notification?.title,
           name: updatedUser.firstName,
           message: notificationToSend!.message.replace(

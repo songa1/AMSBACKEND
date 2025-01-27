@@ -109,7 +109,7 @@ const UserController: UserController = {
           where: { id: userId },
         });
         if (deleted) {
-          return res.status(201).json({ message: "User deleted succesfully" });
+          return res.status(201).json({ message: "User deleted successfully" });
         } else {
           return res.status(500).json({ message: "User delete failed" });
         }

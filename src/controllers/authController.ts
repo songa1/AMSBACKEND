@@ -51,7 +51,7 @@ const AuthController: AuthController = {
         return res.status(401).json({ error: "Invalid credentials" });
       }
 
-      const token = await generateToken(user);
+      const token = generateToken(user);
 
       const updatedUser = await prisma.user.update({
         where: { id: user.id },
@@ -87,7 +87,7 @@ const AuthController: AuthController = {
           .json({ error: "Enter correct password, or use forgot password!" });
       }
 
-      const newPassword = await hashPassword(password);
+      const newPassword = hashPassword(password);
 
       const updatedUser = await prisma.user.update({
         where: { id: user.id },
@@ -206,7 +206,7 @@ const AuthController: AuthController = {
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }
-      const hashedPassword = await hashPassword(newPassword);
+      const hashedPassword = hashPassword(newPassword);
       await prisma.user.update({
         where: { id: user.id },
         data: { password: hashedPassword, refreshToken: null },

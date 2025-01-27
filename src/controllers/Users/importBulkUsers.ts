@@ -246,7 +246,7 @@ export const importUsers = async (req: Request, res: Response) => {
 
         processedUsers.push(US);
 
-        const email = await sendEmail({
+        await sendEmail({
           subject: "Your profile on YALI AMS created successfully!",
           name: US.firstName,
           message: `<div><p style="font-size: 16px; line-height: 1.5; color: #333;">
@@ -269,6 +269,7 @@ export const importUsers = async (req: Request, res: Response) => {
             /\[name\]/g,
             item?.firstName
           ),
+          actions: notificationToSend?.link,
           receiverId: US?.id,
           opened: false,
           createdAt: new Date(),
