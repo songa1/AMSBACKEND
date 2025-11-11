@@ -133,7 +133,7 @@ CREATE TABLE `User` (
 -- CreateTable
 CREATE TABLE `Message` (
     `id` VARCHAR(191) NOT NULL,
-    `message` VARCHAR(191) NOT NULL,
+    `message` VARCHAR(1000) NOT NULL,
     `senderId` VARCHAR(191) NULL,
     `receiverId` VARCHAR(191) NULL,
     `public` BOOLEAN NOT NULL DEFAULT true,
@@ -147,7 +147,7 @@ CREATE TABLE `Message` (
 -- CreateTable
 CREATE TABLE `Notifications` (
     `id` VARCHAR(191) NOT NULL,
-    `message` VARCHAR(191) NOT NULL,
+    `message` VARCHAR(1000) NOT NULL,
     `title` VARCHAR(191) NOT NULL,
     `receiverId` VARCHAR(191) NULL,
     `opened` BOOLEAN NOT NULL,
