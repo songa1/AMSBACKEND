@@ -20,14 +20,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Sophie20202/AMSBACKEND.git"
+    "url": "git+https://github.com/songa1/AMSBACKEND.git"
   },
-  "author": "sophie",
+  "author": "ubunifu-labs",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Sophie20202/AMSBACKEND/issues"
+    "url": "https://github.com/songa1/AMSBACKEND/issues"
   },
-  "homepage": "https://github.com/Sophie20202/AMSBACKEND#readme",
+  "homepage": "https://github.com/songa1/AMSBACKEND#readme",
   "dependencies": {
     "@netlify/functions": "^2.7.0",
     "@prisma/client": "^5.15.0",

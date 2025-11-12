@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { subDays, subMinutes, subMonths, subWeeks } from "date-fns";
+import { subDays } from "date-fns/subDays";
+import { subMonths } from "date-fns/subMonths";
 import { Request, Response } from "express";
 
 const prisma = new PrismaClient();
