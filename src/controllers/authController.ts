@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { generateToken, hashPassword, verifyToken } from "../helpers/auth";
 import sendEmail from "../helpers/sendMail";
 

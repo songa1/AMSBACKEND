@@ -29,9 +29,8 @@
   },
   "homepage": "https://github.com/songa1/AMSBACKEND#readme",
   "dependencies": {
-    "@netlify/functions": "^2.7.0",
     "@prisma/client": "^5.15.0",
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.3",
     "body-parser": "^1.20.2",
     "cloudinary": "^2.4.0",
     "cors": "^2.8.5",
@@ -52,7 +51,6 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
-    "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/express-fileupload": "^1.5.1",
