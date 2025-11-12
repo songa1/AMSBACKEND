@@ -38,7 +38,6 @@
     "countries-list": "^3.1.0",
     "countries-states-cities": "^1.0.6",
     "csv-parser": "^3.0.0",
-    "date-fns": "^3.6.0",
     "express": "^4.19.2",
     "express-fileupload": "^1.5.1",
     "handlebars": "^4.7.8",

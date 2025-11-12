@@ -1,7 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { subDays } from "date-fns/subDays";
-import { subMonths } from "date-fns/subMonths";
 import { Request, Response } from "express";
+import { subtractDays, subtractMonths } from "../helpers/date";
 
 const prisma = new PrismaClient();
 
@@ -12,8 +11,8 @@ export const notificationTypes = {
 };
 
 export async function generateProfileUpdateNotifications() {
-  const sixMonthAgo = subMonths(new Date(), 6);
-  const oneDayAgo = subDays(new Date(), 1);
+  const sixMonthAgo = subtractMonths(new Date(), 6);
+  const oneDayAgo = subtractDays(new Date(), 1);
   const notification = await prisma.notificationSetup.findFirst({
     where: { usage: notificationTypes.UPDATE },
   });
