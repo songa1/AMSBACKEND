@@ -24,7 +24,6 @@ const transporter = nodemailer.createTransport({
 // };
 
 async function sendEmail(replacements: Email) {
-  // const htmlTemplate = loadTemplate("emailTemplate", replacements);
 
   try {
     const info = await transporter.sendMail({

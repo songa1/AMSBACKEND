@@ -5,6 +5,7 @@ import UserController, {
 } from "../controllers/userController";
 import { ChangeUserRole } from "../controllers/DataControllers/RoleController";
 import CreateUserProfile from "../controllers/Users/createUser";
+import { inviteUser } from "../controllers/Users/inviteUser";
 
 const router = Router();
 
@@ -12,6 +13,7 @@ const router = Router();
 router.get("/", UserController.getAllUsers);
 router.get("/:userId", UserController.getUserById);
 router.post("/", UserController.createUser);
+router.post("/invite", inviteUser);
 router.post("/profile", CreateUserProfile);
 router.post("/import", importUsers);
 router.post("/export", exportUsers);
