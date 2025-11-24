@@ -30,10 +30,11 @@ const CreateUserProfile = async (req: Request, res: Response) => {
         .json({ error: "User with this email already exists" });
     }
 
-    const refreshToken = await generateToken(user);
+    const refreshToken = generateToken(user);
 
     const createdUser = await prisma.user.create({
       data: {
+        id: user?.id,
         firstName: user.firstName,
         middleName: user.middleName,
         lastName: user.lastName,
@@ -61,11 +62,11 @@ const CreateUserProfile = async (req: Request, res: Response) => {
         whatsappNumber: user.whatsappNumber,
         gender: {
           connect: {
-            name: user.genderName ? user?.genderName : "Not Specified",
+            id: user.genderId ? +user?.genderId : 1,
           },
         },
         nearestLandmark: user.nearestLandmark,
-        cohort: { connect: { id: user.cohortId ? user?.cohortId : 1 } },
+        cohort: { connect: { id: user.cohortId ? +user?.cohortId : 1 } },
         track: {
           connect: { id: user.trackId ? user?.trackId : "unspecified" },
         },
@@ -77,10 +78,10 @@ const CreateUserProfile = async (req: Request, res: Response) => {
         bio: user?.bio || "",
         state: {
           connect: {
-            id: user?.state ? user?.state : "unspecified",
+            id: user?.stateId ? user?.stateId : "unspecified",
           },
         },
-        password: user.password,
+        password: undefined,
         positionInEmployed: undefined,
         positionInFounded: undefined,
         organizationEmployedId: undefined,
@@ -139,12 +140,6 @@ const CreateUserProfile = async (req: Request, res: Response) => {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
-}
-
-const createFoundedOrganization = (req: Request, res: Response) => {
-  try {
-    const { userId } = req.body;
-  } catch (error: any) {}
 };
 
 export default CreateUserProfile;

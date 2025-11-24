@@ -92,20 +92,30 @@ export const getSector = async (req: Request, res: Response) => {
 };
 
 export const getSectorsByDistrict = async (req: Request, res: Response) => {
-  const districtName = req.params.districtName as string;
+  const districtId = req.params.districtId;
+
   try {
+    const district = await prisma.district.findFirst({
+      where: { id: districtId },
+    });
+
+    if (!district) {
+      return res.status(404).json({ message: "District not found" });
+    }
+
     const sectors = await prisma.sector.findMany({
       where: {
-        districtName: districtName,
+        districtName: district.name,
       },
     });
-    res.status(200).send({
-      message: "Sectors in " + districtName,
+
+    return res.status(200).json({
+      message: `Sectors in ${district.name}`,
       data: sectors,
       count: sectors.length,
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
