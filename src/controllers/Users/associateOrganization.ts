@@ -81,6 +81,8 @@ export const updateUserOrganization = async (req: Request, res: Response) => {
       updateData = { organizationEmployedId: organizationId };
     }
 
+    console.log("OrgId", organizationId, "UpdateData", updateData, userId);
+
     const updatedUser = await prisma.user.update({
       where: { id: userId },
       data: updateData,

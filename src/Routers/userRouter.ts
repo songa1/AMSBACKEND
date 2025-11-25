@@ -15,14 +15,13 @@ const router = Router();
 
 router.get("/", getAllUsers); // used to get all users
 router.get("/:userId", getUserById); // used to get user by ID
-router.post("/", UserController.createUser);
 router.post("/invite", inviteUser); // used to invite user via email
 router.post("/profile", CreateUserProfile); // used to add user profile
 router.put("/org", updateUserOrganization); // used to associate organization while adding new users in bulk
 router.post("/import", importUsers);
 router.post("/export", exportUsers);
 router.post("/bulk", UserController.bulkAddUsers);
-router.put("/:userId", updateUser);
+router.put("/:userId", updateUser); // update members data
 router.delete("/:userId", deleteUser); // delete one user
 router.post("/role/:userId", ChangeUserRole); // used to change user role
 
