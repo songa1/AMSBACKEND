@@ -43,11 +43,11 @@ const updateOrCreateOrganization = async (
   if (existingId && existing) {
     return prisma.organization.update({
       where: { id: existingId },
-      data: payload,
+      data: payload as any,
     });
   }
 
-  return prisma.organization.create({ data: payload });
+  return prisma.organization.create({ data: payload as any });
 };
 
 export const updateUser = async (req: Request, res: Response) => {
