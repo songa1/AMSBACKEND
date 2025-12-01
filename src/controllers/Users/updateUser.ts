@@ -5,6 +5,7 @@ const prisma = new PrismaClient();
 import sendEmail from "../../helpers/sendMail";
 import { notificationTypes } from "../notificationController";
 import { Organization } from "../../Types/org";
+import { safeConnect } from "../../helpers/safeConnect";
 
 const updateOrCreateOrganization = async (
   data: Organization,
@@ -16,38 +17,26 @@ const updateOrCreateOrganization = async (
     ? await prisma.organization.findUnique({ where: { id: existingId } })
     : null;
 
-  const payload = {
-    name: data?.name ?? existing?.name ?? "Unnamed Organization",
-    workingSector: {
-      connect: {
-        id: data?.workingSectorId ?? existing?.workingSectorId ?? "unspecified",
-      },
-    },
-    district: {
-      connect: {
-        id: data?.districtId ?? existing?.districtId ?? "Not Specified",
-      },
-    },
-    sector: {
-      connect: { id: data?.sectorId ?? existing?.sectorId ?? "unspecified" },
-    },
-    country: {
-      connect: { id: data?.countryId ?? existing?.countryId ?? "unspecified" },
-    },
-    state: {
-      connect: { id: data?.stateId ?? existing?.stateId ?? "unspecified" },
-    },
-    website: data?.website ?? existing?.website ?? "#",
+  const payload: any = {
+    name: data.name ?? existing?.name ?? undefined,
+    website: data.website ?? existing?.website ?? undefined,
   };
 
-  if (existingId && existing) {
+  if (data.workingSectorId)
+    payload.workingSector = safeConnect(data.workingSectorId);
+  if (data.countryId) payload.country = safeConnect(data.countryId);
+  if (data.stateId) payload.state = safeConnect(data.stateId);
+  if (data.districtId) payload.district = safeConnect(data.districtId);
+  if (data.sectorId) payload.sector = safeConnect(data.sectorId);
+
+  if (existing) {
     return prisma.organization.update({
-      where: { id: existingId },
-      data: payload as any,
+      where: { id: existingId! },
+      data: payload,
     });
   }
 
-  return prisma.organization.create({ data: payload as any });
+  return prisma.organization.create({ data: payload });
 };
 
 export const updateUser = async (req: Request, res: Response) => {
@@ -63,26 +52,14 @@ export const updateUser = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "User does not exist!" });
     }
 
-    const foundedExisting = organizationFounded?.id
-      ? await prisma.organization.findFirst({
-          where: { id: organizationFounded.id },
-        })
-      : null;
-
-    const employedExisting = organizationEmployed?.id
-      ? await prisma.organization.findFirst({
-          where: { id: organizationEmployed.id },
-        })
-      : null;
-
     const organizationFoundedUpdate = await updateOrCreateOrganization(
       organizationFounded,
-      foundedExisting?.id || null
+      organizationFounded?.id ?? null
     );
 
     const organizationEmployedUpdate = await updateOrCreateOrganization(
       organizationEmployed,
-      employedExisting?.id || null
+      organizationEmployed?.id ?? null
     );
 
     const userUpdateData: any = {
@@ -90,37 +67,10 @@ export const updateUser = async (req: Request, res: Response) => {
       middleName: user?.middleName ?? existing.middleName,
       lastName: user?.lastName ?? existing.lastName,
       email: user?.email ?? existing.email,
-
-      residentDistrict: {
-        connect: {
-          id: user?.residentDistrictId ?? existing.residentDistrictId,
-        },
-      },
-      residentCountry: {
-        connect: { id: user?.residentCountryId ?? existing.residentCountryId },
-      },
-      residentSector: {
-        connect: { id: user?.residentSectorId ?? existing.residentSectorId },
-      },
-      state: {
-        connect: { id: user?.state ?? existing.stateId },
-      },
-
       phoneNumber: user?.phoneNumber ?? existing.phoneNumber,
       whatsappNumber: user?.whatsappNumber ?? existing.whatsappNumber,
       nearestLandmark: user?.nearestLandmark ?? existing.nearestLandmark,
-
       bio: user?.bio ?? existing.bio,
-
-      cohort: {
-        connect: { id: user?.cohortId ?? existing.cohortId },
-      },
-      track: {
-        connect: { id: user?.track ?? existing.trackId },
-      },
-      gender: {
-        connect: { name: user?.genderName ?? existing.genderName },
-      },
 
       facebook: user?.facebook ?? existing.facebook,
       instagram: user?.instagram ?? existing.instagram,
@@ -130,40 +80,44 @@ export const updateUser = async (req: Request, res: Response) => {
       positionInFounded: user?.positionInFounded ?? existing.positionInFounded,
       positionInEmployed:
         user?.positionInEmployed ?? existing.positionInEmployed,
-
-      // Keep previous picture if no new one is sent
-      profileImage: {
-        connect: { id: user?.profileImageId ?? existing.profileImageId },
-      },
-
-      // Organization relations
-      organizationFounded: organizationFoundedUpdate
-        ? { connect: { id: organizationFoundedUpdate.id } }
-        : existing.organizationFoundedId
-        ? { connect: { id: existing.organizationFoundedId } }
-        : undefined,
-
-      organizationEmployed: organizationEmployedUpdate
-        ? { connect: { id: organizationEmployedUpdate.id } }
-        : existing.organizationEmployedId
-        ? { connect: { id: existing.organizationEmployedId } }
-        : undefined,
-
-      updatedAt: new Date(),
     };
 
-    // --------------------------
-    // 3. UPDATE USER
-    // --------------------------
+    if (user?.residentDistrictId)
+      userUpdateData.residentDistrict = safeConnect(user.residentDistrictId);
+
+    if (user?.residentCountryId)
+      userUpdateData.residentCountry = safeConnect(user.residentCountryId);
+
+    if (user?.residentSectorId)
+      userUpdateData.residentSector = safeConnect(user.residentSectorId);
+
+    if (user?.state) userUpdateData.state = safeConnect(user.state);
+
+    if (user?.cohortId) userUpdateData.cohort = safeConnect(user.cohortId);
+
+    if (user?.trackId) userUpdateData.track = safeConnect(user.trackId);
+
+    if (user?.genderName) userUpdateData.gender = safeConnect(user.genderName);
+
+    if (user?.profileImageId)
+      userUpdateData.profileImage = safeConnect(user.profileImageId);
+
+    if (organizationFoundedUpdate) {
+      userUpdateData.organizationFounded = safeConnect(
+        organizationFoundedUpdate.id
+      );
+    }
+
+    if (organizationEmployedUpdate) {
+      userUpdateData.organizationEmployed = safeConnect(
+        organizationEmployedUpdate.id
+      );
+    }
 
     const updatedUser = await prisma.user.update({
       where: { id: userId },
       data: userUpdateData,
     });
-
-    // --------------------------
-    // 4. SEND NOTIFICATION
-    // --------------------------
 
     const notificationToSend = await prisma.notificationSetup.findFirst({
       where: { usage: notificationTypes.UPDATED },

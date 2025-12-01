@@ -13,6 +13,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
             sector: true,
             country: true,
             workingSector: true,
+            state: true,
           },
         },
         organizationFounded: {
@@ -21,6 +22,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
             sector: true,
             country: true,
             workingSector: true,
+            state: true,
           },
         },
         role: true,
@@ -30,6 +32,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
         residentCountry: true,
         cohort: true,
         track: true,
+        state: true,
         profileImage: true,
       },
     });
@@ -56,6 +59,7 @@ export const getUserById = async (req: Request, res: Response) => {
             sector: true,
             workingSector: true,
             country: true,
+            state: true,
           },
         },
         organizationFounded: {
@@ -64,6 +68,7 @@ export const getUserById = async (req: Request, res: Response) => {
             sector: true,
             workingSector: true,
             country: true,
+            state: true,
           },
         },
         gender: true,
@@ -73,6 +78,7 @@ export const getUserById = async (req: Request, res: Response) => {
         role: true,
         track: true,
         profileImage: true,
+        state: true,
         residentCountry: true,
       },
     });
